@@ -36,9 +36,9 @@ type Locations = {
 };
 
 export const CountryCode = {
-    JP: { id: "JP" },
-    KR: { id: "KR" },
-    CN: { id: "CN" },
+    JP: "JP",
+    KR: "KR",
+    CN: "CN",
 };
 
 export const MediaFormat = {
@@ -93,4 +93,12 @@ export const MediaSort = {
     UPDATED_AT_DESC: { id: "UPDATED_AT_DESC", label: "Updated At ↓" },
     FAVOURITES: { id: "FAVOURITES", label: "Favourites ↑" },
     FAVOURITES_DESC: { id: "FAVOURITES_DESC", label: "Favourites ↓" },
+};
+
+export const MediaScoreFormat = {
+    POINT_100: "POINT_100",
+    POINT_10_DECIMAL: "POINT_10_DECIMAL",
+    POINT_10: "POINT_10",
+    POINT_5: "POINT_5",
+    POINT_3: "POINT_3",
 };

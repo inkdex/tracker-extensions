@@ -70,11 +70,55 @@ export class SettingsForm extends Form {
 
     async handleLoginSuccess(accessToken: string): Promise<void> {
         Application.setSecureState(accessToken, "session");
+
+        const viewer = await makeRequest<Viewer>(viewerQuery, true);
+
+        Application.setState(viewer.Viewer.id, "viewer-id");
+        Application.setState(
+            JSON.stringify(
+                viewer.Viewer.mediaListOptions.mangaList.advancedScoring,
+            ),
+            "viewer-advanced-scoring",
+        );
+        Application.setState(
+            JSON.stringify(
+                viewer.Viewer.mediaListOptions.mangaList.sectionOrder,
+            ),
+            "viewer-list-order",
+        );
+        Application.setState(
+            JSON.stringify(
+                viewer.Viewer.mediaListOptions.mangaList.customLists,
+            ),
+            "viewer-custom-lists",
+        );
+        Application.setState(
+            String(
+                viewer.Viewer.mediaListOptions.mangaList
+                    .splitCompletedSectionByFormat,
+            ),
+            "viewer-split-completed-list-by-format",
+        );
+        Application.setState(
+            String(
+                viewer.Viewer.mediaListOptions.mangaList.advancedScoringEnabled,
+            ),
+            "viewer-advanced-scoring-enabled",
+        );
+
         this.reloadForm();
     }
 
     async logOut(): Promise<void> {
         Application.setSecureState(null, "session");
+
+        Application.setState(null, "viewer-id");
+        Application.setState(null, "viewer-advanced-scoring");
+        Application.setState(null, "viewer-list-order");
+        Application.setState(null, "viewer-custom-lists");
+        Application.setState(null, "viewer-split-completed-list-by-format");
+        Application.setState(null, "viewer-advanced-scoring-enabled");
+
         this.reloadForm();
     }
 }

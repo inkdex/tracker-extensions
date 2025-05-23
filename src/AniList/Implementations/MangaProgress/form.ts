@@ -13,6 +13,8 @@ import {
     Section,
     SelectRow,
     SelectRowProps,
+    StepperRow,
+    StepperRowProps,
     ToggleRow,
     ToggleRowProps,
 } from "@paperback/types";
@@ -28,25 +30,24 @@ import {
     titleProgressQuery,
     TitleProgressQueryVeriables,
 } from "../../GraphQL/Tracking";
-import { Viewer } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 
 export class TrackingForm extends Form {
-    viewer: Viewer;
+    viewerId: number;
     sourceMangaId: number;
     loadRequest?: Promise<unknown>;
     titleProgress?: TitleProgress;
     error?: Error;
 
-    constructor(viewer: Viewer, sourceMangaId: number) {
+    constructor(viewerId: number, sourceMangaId: number) {
         super();
-        this.viewer = viewer;
+        this.viewerId = viewerId;
         this.sourceMangaId = sourceMangaId;
     }
 
     override formWillAppear(): void {
         const queryVariables: TitleProgressQueryVeriables = {
-            userId: this.viewer.Viewer.id,
+            userId: this.viewerId,
             mediaId: this.sourceMangaId,
         };
 
@@ -110,7 +111,7 @@ export class TrackingForm extends Form {
         const titleProgress = this.titleProgress.MediaList;
 
         const mutationVariables: TitleProgressMutationVariables = {
-            userId: this.viewer.Viewer.id,
+            userId: this.viewerId,
             mediaId: this.sourceMangaId,
             status: titleProgress.status,
             score: titleProgress.score,
@@ -220,27 +221,46 @@ export class TrackingForm extends Form {
             ),
         };
 
-        const chapterProgressProps: InputRowProps = {
+        const chapterProgressProps: StepperRowProps = {
             title: "Chapters",
-            value: titleProgress.progress.toString(),
+            subtitle: "The highest read chapter number",
+            //@ts-expect-error temp until @paperback/types is updated
+            value: titleProgress.progress,
+            minValue: 0,
+            maxValue: 99999,
+            stepValue: 1,
+            loopOver: false,
+
             onValueChange: Application.Selector(
                 this as TrackingForm,
                 "chapterProgressUpdate",
             ),
         };
 
-        const volumeProgressProps: InputRowProps = {
+        const volumeProgressProps: StepperRowProps = {
             title: "Volumes",
-            value: titleProgress.progressVolumes.toString(),
+            subtitle: "The highest read volume number",
+            //@ts-expect-error temp until @paperback/types is updated
+            value: titleProgress.progressVolumes,
+            minValue: 0,
+            maxValue: 99999,
+            stepValue: 1,
+            loopOver: false,
             onValueChange: Application.Selector(
                 this as TrackingForm,
                 "volumeProgressUpdate",
             ),
         };
 
-        const rereadCountProps: InputRowProps = {
+        const rereadCountProps: StepperRowProps = {
             title: "Reread Count",
-            value: titleProgress.repeat.toString(),
+            subtitle: "The amount of times you have reread the title",
+            //@ts-expect-error temp until @paperback/types is updated
+            value: titleProgress.repeat,
+            minValue: 0,
+            maxValue: 99999,
+            stepValue: 1,
+            loopOver: false,
             onValueChange: Application.Selector(
                 this as TrackingForm,
                 "rereadCountUpdate",
@@ -248,17 +268,11 @@ export class TrackingForm extends Form {
         };
 
         return [
-            Section({ id: "status", header: "Status" }, [
+            Section({ id: "progress", header: "Progress" }, [
                 SelectRow("status", statusProps),
-            ]),
-            Section({ id: "chapterProgress", header: "Chapter Progress" }, [
-                InputRow("chapterProgress", chapterProgressProps),
-            ]),
-            Section({ id: "volumeProgress", header: "Volume Progress" }, [
-                InputRow("volumeProgress", volumeProgressProps),
-            ]),
-            Section({ id: "rereadCount", header: "Reread Count" }, [
-                InputRow("rereadCount", rereadCountProps),
+                StepperRow("chapterProgress", chapterProgressProps),
+                StepperRow("volumeProgress", volumeProgressProps),
+                StepperRow("rereadCount", rereadCountProps),
             ]),
         ];
     }
@@ -267,43 +281,31 @@ export class TrackingForm extends Form {
         this.titleProgress!.MediaList.status = newStatus[0];
     }
 
-    async chapterProgressUpdate(newChapterProgress: string): Promise<void> {
-        const chapterProgress = Number(newChapterProgress);
-
-        if (isNaN(chapterProgress)) {
-            this.reloadForm();
-            return;
-        }
-
-        this.titleProgress!.MediaList.progress = chapterProgress;
+    async chapterProgressUpdate(newChapterProgress: number): Promise<void> {
+        this.titleProgress!.MediaList.progress = newChapterProgress;
+        this.reloadForm();
     }
 
-    async volumeProgressUpdate(newVolumeProgress: string): Promise<void> {
-        const volumeProgress = Number(newVolumeProgress);
-
-        if (isNaN(volumeProgress)) {
-            this.reloadForm();
-            return;
-        }
-
-        this.titleProgress!.MediaList.progressVolumes = volumeProgress;
+    async volumeProgressUpdate(newVolumeProgress: number): Promise<void> {
+        this.titleProgress!.MediaList.progressVolumes = newVolumeProgress;
+        this.reloadForm();
     }
 
-    async rereadCountUpdate(newRereadCount: string): Promise<void> {
-        const rereadCount = Number(newRereadCount);
-
-        if (isNaN(rereadCount)) {
-            this.reloadForm();
-            return;
-        }
-
-        this.titleProgress!.MediaList.repeat = rereadCount;
+    async rereadCountUpdate(newRereadCount: number): Promise<void> {
+        this.titleProgress!.MediaList.repeat = newRereadCount;
+        this.reloadForm();
     }
 
     getScoreSections(): FormSectionElement[] {
-        const scoreProps: InputRowProps = {
-            title: "Score ",
-            value: this.titleProgress!.MediaList.score.toString(),
+        const scoreProps: StepperRowProps = {
+            title: "Score",
+            subtitle: "",
+            //@ts-expect-error temp until @paperback/types is updated
+            value: this.titleProgress!.MediaList.score,
+            minValue: 0,
+            maxValue: 10,
+            stepValue: 0.1,
+            loopOver: false,
             onValueChange: Application.Selector(
                 this as TrackingForm,
                 "scoreUpdate",
@@ -314,20 +316,14 @@ export class TrackingForm extends Form {
 
         return [
             Section({ id: "score", header: "Score" }, [
-                InputRow("score", scoreProps),
+                StepperRow("score", scoreProps),
             ]),
         ];
     }
 
-    async scoreUpdate(newScore: string): Promise<void> {
-        const score = Number(newScore);
-
-        if (isNaN(score) || 0 > score || score > 10) {
-            this.reloadForm();
-            return;
-        }
-
-        this.titleProgress!.MediaList.score = score;
+    async scoreUpdate(newScore: number): Promise<void> {
+        this.titleProgress!.MediaList.score = Number(newScore.toFixed(1));
+        this.reloadForm();
     }
 
     getPrivacySection(): FormSectionElement {

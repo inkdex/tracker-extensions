@@ -38,7 +38,15 @@ export default async function makeRequest<
         ) as JwtPayload;
 
         if (Number(payload.exp) < new Date().valueOf() / 1000) {
-            Application.setSecureState(undefined, "session");
+            Application.setSecureState(null, "session");
+
+            Application.setState(null, "viewer-id");
+            Application.setState(null, "viewer-advanced-scoring");
+            Application.setState(null, "viewer-list-order");
+            Application.setState(null, "viewer-custom-lists");
+            Application.setState(null, "viewer-split-completed-list-by-format");
+            Application.setState(null, "viewer-advanced-scoring-enabled");
+
             throw new Error(
                 "Your authorization token has expired, please log back in through the AniList settings",
             );

@@ -3,7 +3,7 @@ import {
     DiscoverSectionsAndSearch,
     DiscoverSectionsAndSearchVariables,
 } from "../GraphQL/DiscoverSectionsAndSearch";
-import { MediaStatus } from "../GraphQL/General";
+import { MediaFormat, MediaStatus } from "../GraphQL/General";
 import makeRequest from "../Services/Requests";
 
 export async function getItems<ResultItemType>(
@@ -20,10 +20,19 @@ export async function getItems<ResultItemType>(
     const searchResults = json.Page.media;
 
     for (const searchResult of searchResults) {
-        const title =
+        let title = "";
+        switch (searchResult.format) {
+            case "NOVEL":
+                title += "(" + MediaFormat.NOVEL.label + ") ";
+                break;
+            case "ONE_SHOT":
+                title += "(" + MediaFormat.ONE_SHOT.label + ") ";
+        }
+
+        title +=
             searchResult.title.english ??
-            searchResult.title.native ??
             searchResult.title.romaji ??
+            searchResult.title.native ??
             "No Title";
 
         const contentRating: ContentRating = searchResult.isAdult
