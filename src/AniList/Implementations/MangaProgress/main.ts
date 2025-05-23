@@ -15,7 +15,6 @@ import {
     titleProgressQuery,
     TitleProgressQueryVeriables,
 } from "../../GraphQL/Tracking";
-import { Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 import { TrackingForm } from "./form";
 
@@ -23,18 +22,30 @@ export class MangaProgressImplementation implements MangaProgressProviding {
     async getMangaProgressManagementForm(
         sourceManga: SourceManga,
     ): Promise<Form> {
-        const viewer = await makeRequest<Viewer>(viewerQuery, true);
+        const viewerId = Number(Application.getState("viewer-id"));
 
-        return new TrackingForm(viewer, Number(sourceManga.mangaId));
+        if (isNaN(viewerId)) {
+            throw new Error(
+                "You are not authenticated, please log in through the AniList settings",
+            );
+        }
+
+        return new TrackingForm(viewerId, Number(sourceManga.mangaId));
     }
 
     async getMangaProgress(
         sourceManga: SourceManga,
     ): Promise<MangaProgress | undefined> {
-        const viewer = await makeRequest<Viewer>(viewerQuery, true);
+        const viewerId = Number(Application.getState("viewer-id"));
+
+        if (isNaN(viewerId)) {
+            throw new Error(
+                "You are not authenticated, please log in through the AniList settings",
+            );
+        }
 
         const queryVariables: TitleProgressQueryVeriables = {
-            userId: viewer.Viewer.id,
+            userId: viewerId,
             mediaId: Number(sourceManga.mangaId),
         };
 
@@ -43,7 +54,7 @@ export class MangaProgressImplementation implements MangaProgressProviding {
             const json = await makeRequest<
                 TitleProgress,
                 TitleProgressQueryVeriables
-            >(titleProgressQuery, false, queryVariables);
+            >(titleProgressQuery, true, queryVariables);
             mediaList = json.MediaList;
         } catch (error) {
             if (!error?.toString().includes("[404]")) {
@@ -76,17 +87,42 @@ export class MangaProgressImplementation implements MangaProgressProviding {
     async processChapterReadActionQueue(
         actions: TrackedMangaChapterReadAction[],
     ): Promise<ChapterReadActionQueueProcessingResult> {
-        const viewer = await makeRequest<Viewer>(viewerQuery, true);
+        const viewerId = Number(Application.getState("viewer-id"));
 
         const prog: ChapterReadActionQueueProcessingResult = {
             successfulItems: [],
             failedItems: [],
         };
 
+        if (isNaN(viewerId)) {
+            return prog;
+        }
+
+        const latestChapters: Map<string, number> = new Map();
         for (const action of actions) {
+            if (
+                latestChapters.get(action.sourceManga.mangaId) ??
+                0 < Math.floor(action.readChapter.chapNum)
+            ) {
+                latestChapters.set(
+                    action.sourceManga.mangaId,
+                    Math.floor(action.readChapter.chapNum),
+                );
+            }
+        }
+
+        for (const action of actions) {
+            if (
+                latestChapters.get(action.sourceManga.mangaId) !=
+                action.readChapter.chapNum
+            ) {
+                prog.successfulItems.push(action.sourceManga.mangaId);
+                continue;
+            }
+
             try {
                 const queryVariables: TitleProgressQueryVeriables = {
-                    userId: viewer.Viewer.id,
+                    userId: viewerId,
                     mediaId: Number(action.sourceManga.mangaId),
                 };
 
@@ -95,7 +131,7 @@ export class MangaProgressImplementation implements MangaProgressProviding {
                     const json = await makeRequest<
                         TitleProgress,
                         TitleProgressQueryVeriables
-                    >(titleProgressQuery, false, queryVariables);
+                    >(titleProgressQuery, true, queryVariables);
                     mediaList = json.MediaList;
                 } catch (error) {
                     if (!error?.toString().includes("[404]")) {
@@ -113,9 +149,9 @@ export class MangaProgressImplementation implements MangaProgressProviding {
                 }
 
                 const mutationVariables: TitleProgressMutationVariables = {
-                    userId: viewer.Viewer.id,
+                    userId: viewerId,
                     mediaId: Number(action.sourceManga.mangaId),
-                    progress: action.readChapter.chapNum,
+                    progress: Math.floor(action.readChapter.chapNum),
                 };
 
                 if (
@@ -124,13 +160,13 @@ export class MangaProgressImplementation implements MangaProgressProviding {
                         mediaList.progressVolumes >= action.readChapter.volume)
                 ) {
                     mutationVariables.progressVolumes =
-                        action.readChapter.volume ?? 1;
+                        Math.floor(action.readChapter.volume ?? 1) - 1;
                 }
 
                 if (!mediaList) {
                     mutationVariables.status = MediaListStatus.CURRENT.id;
                     mutationVariables.progressVolumes =
-                        action.readChapter.volume ?? 1;
+                        Math.floor(action.readChapter.volume ?? 1) - 1;
                 }
 
                 await makeRequest<

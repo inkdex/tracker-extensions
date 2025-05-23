@@ -33,6 +33,7 @@ query Query(
         large
         medium
       }
+      format
       genres
       id
       isAdult
@@ -77,6 +78,7 @@ type DiscoverSectionsAndSearchPageInfo = {
 type DiscoverSectionsAndSearchMedia = {
     chapters: number | null;
     coverImage: DiscoverSectionsAndSearchCoverImage;
+    format: string;
     genres: string[];
     id: number;
     isAdult: boolean;

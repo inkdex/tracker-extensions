@@ -9,6 +9,7 @@ query Query($id: Int) {
       medium
     }
     description
+    format
     genres
     isAdult
     staff {
@@ -48,6 +49,7 @@ type TitleViewMedia = {
     bannerImage: string | null;
     coverImage: TitleViewCoverImage;
     description: string | null;
+    format: string;
     genres: string[];
     isAdult: boolean;
     staff: TitleViewStaff;
@@ -86,6 +88,6 @@ type TitleViewTag = {
 
 type TitleViewTitle = {
     english: string | null;
-    native: string | null;
     romaji: string | null;
+    native: string | null;
 };

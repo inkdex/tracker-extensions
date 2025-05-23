@@ -69,11 +69,11 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
                 break;
             case "popular-manga":
                 sort = MediaSort.POPULARITY_DESC.id;
-                countryOfOrigin = CountryCode.JP.id;
+                countryOfOrigin = CountryCode.JP;
                 break;
             case "popular-manhwa":
                 sort = MediaSort.POPULARITY_DESC.id;
-                countryOfOrigin = CountryCode.KR.id;
+                countryOfOrigin = CountryCode.KR;
                 break;
             case "top-100-manga":
                 sort = MediaSort.SCORE_DESC.id;

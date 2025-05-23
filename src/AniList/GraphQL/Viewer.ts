@@ -1,13 +1,34 @@
 export const viewerQuery = `
 query Query {
-	Viewer {
-		avatar {
-			large
-		}
+  Viewer {
+    avatar {
+      large
+    }
     createdAt
-		id
-		name
-	}
+    id
+    name
+    mediaListOptions {
+      rowOrder
+      scoreFormat
+      mangaList {
+        advancedScoringEnabled
+        advancedScoring
+        customLists
+        splitCompletedSectionByFormat
+        sectionOrder
+      }
+    }
+    options {
+      activityMergeTime
+      disabledListActivity {
+        disabled
+        type
+      }
+      displayAdultContent
+      staffNameLanguage
+      titleLanguage
+    }
+  }
 }
 `;
 
@@ -20,10 +41,38 @@ type ViewerUser = {
     createdAt: number;
     id: number;
     name: string;
+    mediaListOptions: ViewerMediaListOptions;
+    options: ViewerOptions;
 };
 
 type ViewerAvatar = {
     large: string;
+};
+
+type ViewerMediaListOptions = {
+    scoreFormat: string;
+    mangaList: ViewerMangaList;
+};
+
+type ViewerOptions = {
+    activityMergeTime: number;
+    disabledListActivity: ViewerListActivityOption[];
+    displayAdultContent: boolean;
+    staffNameLnaguage: string;
+    titleLanguage: string;
+};
+
+type ViewerMangaList = {
+    advancedScoringEnabled: boolean;
+    advancedScoring: string[];
+    customLists: string[];
+    sectionOrder: string[];
+    splitCompletedSectionByFormat: boolean;
+};
+
+type ViewerListActivityOption = {
+    disabled: boolean;
+    type: string;
 };
 
 export type JwtPayload = {

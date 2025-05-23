@@ -5,7 +5,7 @@ import {
     Tag,
     TagSection,
 } from "@paperback/types";
-import { MediaStatus } from "../../GraphQL/General";
+import { MediaFormat, MediaStatus } from "../../GraphQL/General";
 import {
     TitleView,
     titleViewQuery,
@@ -119,7 +119,14 @@ export class MangaImplementation implements MangaProviding {
             artworkUrls.push(mangaDetails.bannerImage);
         }
 
-        // TODO: Implement additional info
+        const additionalInfo: Record<string, string> = {
+            Format:
+                mangaDetails.format == MediaFormat.MANGA.id
+                    ? MediaFormat.MANGA.label
+                    : mangaDetails.format == MediaFormat.NOVEL.id
+                      ? MediaFormat.NOVEL.label
+                      : MediaFormat.ONE_SHOT.label,
+        };
 
         return {
             mangaId,
@@ -137,6 +144,7 @@ export class MangaImplementation implements MangaProviding {
                 tagGroups,
                 artworkUrls,
                 shareUrl: "https://anilist.co/manga/" + mangaId,
+                additionalInfo,
             },
         };
     }

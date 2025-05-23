@@ -60,7 +60,7 @@ export class SearchResultsImplementation
             sort: sortingOption!.id,
         };
 
-        if (query.title != undefined) {
+        if (query.title) {
             variables.search = query.title;
         }
 
