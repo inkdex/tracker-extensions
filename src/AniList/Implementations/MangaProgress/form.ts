@@ -224,7 +224,6 @@ export class TrackingForm extends Form {
         const chapterProgressProps: StepperRowProps = {
             title: "Chapters",
             subtitle: "The highest read chapter number",
-            //@ts-expect-error temp until @paperback/types is updated
             value: titleProgress.progress,
             minValue: 0,
             maxValue: 99999,
@@ -240,7 +239,6 @@ export class TrackingForm extends Form {
         const volumeProgressProps: StepperRowProps = {
             title: "Volumes",
             subtitle: "The highest read volume number",
-            //@ts-expect-error temp until @paperback/types is updated
             value: titleProgress.progressVolumes,
             minValue: 0,
             maxValue: 99999,
@@ -255,7 +253,6 @@ export class TrackingForm extends Form {
         const rereadCountProps: StepperRowProps = {
             title: "Reread Count",
             subtitle: "The amount of times you have reread the title",
-            //@ts-expect-error temp until @paperback/types is updated
             value: titleProgress.repeat,
             minValue: 0,
             maxValue: 99999,
@@ -300,7 +297,6 @@ export class TrackingForm extends Form {
         const scoreProps: StepperRowProps = {
             title: "Score",
             subtitle: "",
-            //@ts-expect-error temp until @paperback/types is updated
             value: this.titleProgress!.MediaList.score,
             minValue: 0,
             maxValue: 10,

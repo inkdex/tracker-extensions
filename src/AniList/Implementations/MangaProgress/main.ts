@@ -89,34 +89,34 @@ export class MangaProgressImplementation implements MangaProgressProviding {
     ): Promise<ChapterReadActionQueueProcessingResult> {
         const viewerId = Number(Application.getState("viewer-id"));
 
-        const prog: ChapterReadActionQueueProcessingResult = {
+        const trackedReadActions: ChapterReadActionQueueProcessingResult = {
             successfulItems: [],
             failedItems: [],
         };
 
         if (isNaN(viewerId)) {
-            return prog;
+            return trackedReadActions;
         }
 
-        const latestChapters: Map<string, number> = new Map();
+        const highestChapters: Map<string, number> = new Map();
         for (const action of actions) {
             if (
-                latestChapters.get(action.sourceManga.mangaId) ??
-                0 < Math.floor(action.readChapter.chapNum)
+                (highestChapters.get(action.sourceManga.mangaId) ?? 0) <
+                Math.floor(action.chapterNum)
             ) {
-                latestChapters.set(
+                highestChapters.set(
                     action.sourceManga.mangaId,
-                    Math.floor(action.readChapter.chapNum),
+                    Math.floor(action.chapterNum),
                 );
             }
         }
 
         for (const action of actions) {
             if (
-                latestChapters.get(action.sourceManga.mangaId) !=
-                action.readChapter.chapNum
+                (highestChapters.get(action.sourceManga.mangaId) ?? 0) !=
+                Math.floor(action.chapterNum)
             ) {
-                prog.successfulItems.push(action.sourceManga.mangaId);
+                trackedReadActions.successfulItems.push(action.id);
                 continue;
             }
 
@@ -135,38 +135,36 @@ export class MangaProgressImplementation implements MangaProgressProviding {
                     mediaList = json.MediaList;
                 } catch (error) {
                     if (!error?.toString().includes("[404]")) {
-                        prog.failedItems.push(action.sourceManga.mangaId);
+                        trackedReadActions.failedItems.push(action.id);
                         continue;
                     }
                 }
 
                 if (
                     mediaList?.progress &&
-                    mediaList.progress >= action.readChapter.chapNum
+                    mediaList.progress >= action.chapterNum
                 ) {
-                    prog.successfulItems.push(action.sourceManga.mangaId);
+                    trackedReadActions.successfulItems.push(action.id);
                     continue;
                 }
 
                 const mutationVariables: TitleProgressMutationVariables = {
                     userId: viewerId,
                     mediaId: Number(action.sourceManga.mangaId),
-                    progress: Math.floor(action.readChapter.chapNum),
+                    progress: Math.floor(action.chapterNum),
                 };
-
-                if (
-                    !mediaList?.progressVolumes ||
-                    (action.readChapter.volume &&
-                        mediaList.progressVolumes >= action.readChapter.volume)
-                ) {
-                    mutationVariables.progressVolumes =
-                        Math.floor(action.readChapter.volume ?? 1) - 1;
-                }
 
                 if (!mediaList) {
                     mutationVariables.status = MediaListStatus.CURRENT.id;
+                }
+
+                if (
+                    action.chapterVolume &&
+                    (mediaList?.progressVolumes ?? 0) <
+                        Math.floor(action.chapterVolume)
+                ) {
                     mutationVariables.progressVolumes =
-                        Math.floor(action.readChapter.volume ?? 1) - 1;
+                        Math.floor(action.chapterVolume) - 1;
                 }
 
                 await makeRequest<
@@ -174,12 +172,12 @@ export class MangaProgressImplementation implements MangaProgressProviding {
                     TitleProgressMutationVariables
                 >(titleProgressMutationMutation, true, mutationVariables);
 
-                prog.successfulItems.push(action.sourceManga.mangaId);
+                trackedReadActions.successfulItems.push(action.id);
             } catch {
-                prog.failedItems.push(action.sourceManga.mangaId);
+                trackedReadActions.failedItems.push(action.id);
             }
         }
 
-        return prog;
+        return trackedReadActions;
     }
 }
