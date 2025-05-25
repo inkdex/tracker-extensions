@@ -9,6 +9,8 @@ query Query(
   $statusNotIn: [MediaStatus]
   $genreIn: [String]
   $genreNotIn: [String]
+  $tagsIn: [String]
+  $tagsNotIn: [String]
   $sort: [MediaSort]
 ) {
   Page(page: $page, perPage: 50) {
@@ -25,6 +27,8 @@ query Query(
       status_not_in: $statusNotIn
       genre_in: $genreIn
       genre_not_in: $genreNotIn
+      tag_in: $tagsIn
+      tag_not_in: $tagsNotIn
       sort: $sort
     ) {
       chapters
@@ -58,8 +62,10 @@ export type DiscoverSectionsAndSearchVariables = {
     format_not_in?: string[];
     status_in?: string[];
     status_not_in?: string[];
-    genres_in?: string[];
-    genres_not_in?: string[];
+    genreIn?: string[];
+    genreNotIn?: string[];
+    tagsIn?: string[];
+    tagsNotIn?: string[];
 };
 
 export type DiscoverSectionsAndSearch = {
