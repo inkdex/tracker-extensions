@@ -39,6 +39,7 @@ export const CountryCode = {
     JP: "JP",
     KR: "KR",
     CN: "CN",
+    TW: "TW",
 };
 
 export const MediaFormat = {
