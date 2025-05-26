@@ -9,6 +9,7 @@ import makeRequest from "../Services/Requests";
 export async function getItems<ResultItemType>(
     query: string,
     queryVariables: DiscoverSectionsAndSearchVariables,
+    needsAuth: boolean,
     metadata: number | undefined,
 ): Promise<PagedResults<ResultItemType>> {
     const items: ResultItemType[] = [];
@@ -16,7 +17,7 @@ export async function getItems<ResultItemType>(
     const json = await makeRequest<
         DiscoverSectionsAndSearch,
         DiscoverSectionsAndSearchVariables
-    >(query, false, queryVariables);
+    >(query, needsAuth, queryVariables);
     const searchResults = json.Page.media;
 
     for (const searchResult of searchResults) {
