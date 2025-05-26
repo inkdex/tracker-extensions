@@ -587,6 +587,7 @@ export class SearchResultsImplementation
                             break;
                         case "excluded":
                             variables.onList = false;
+                            needsAuth = true;
                             break;
                     }
 
