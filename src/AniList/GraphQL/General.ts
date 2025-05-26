@@ -36,9 +36,10 @@ type Locations = {
 };
 
 export const CountryCode = {
-    JP: "JP",
-    KR: "KR",
-    CN: "CN",
+    JP: { id: "JP", label: "Japan" },
+    KR: { id: "KR", label: "South Korea" },
+    CN: { id: "CN", label: "China" },
+    TW: { id: "TW", label: "Taiwan" },
 };
 
 export const MediaFormat = {
@@ -101,4 +102,25 @@ export const MediaScoreFormat = {
     POINT_10: "POINT_10",
     POINT_5: "POINT_5",
     POINT_3: "POINT_3",
+};
+
+export const MediaSourceMaterial = {
+    ORIGINAL: { id: "ORIGINAL", label: "Original" },
+    MANGA: { id: "MANGA", label: "Manga" },
+    LIGHT_NOVEL: { id: "LIGHT_NOVEL", label: "Light Novel" },
+    WEB_NOVEL: { id: "WEB_NOVEL", label: "Web Novel" },
+    NOVEL: { id: "NOVEL", label: "Novel" },
+    Anime: { id: "ANIME", label: "Anime" },
+    VISUAL_NOVEL: { id: "VISUAL_NOVEL", label: "Visual Novel" },
+    VIDEO_GAME: { id: "VIDEO_GAME", label: "Video Game" },
+    DOUJINSHI: { id: "DOUJINSHI", label: "Doujinshi" },
+    COMIC: { id: "COMIC", label: "Comic" },
+    LIVE_ACTION: { id: "LIVE_ACTION", label: "Live Action" },
+    GAME: { id: "GAME", label: "Game" },
+    MULTIMEDIA_PROJECT: {
+        id: "MULTIMEDIA_PROJECT",
+        label: "Multimedia Project",
+    },
+    PICTURE_BOOK: { id: "PICTURE_BOOK", label: "Picture Book" },
+    OTHER: { id: "OTHER", label: "Other" },
 };

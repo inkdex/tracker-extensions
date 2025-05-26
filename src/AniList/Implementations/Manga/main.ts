@@ -28,7 +28,7 @@ export class MangaImplementation implements MangaProviding {
         const mangaDetails = json.Media;
 
         const synopsis = mangaDetails.description
-            ? mangaDetails.description.replace(
+            ? mangaDetails.description.replaceAll(
                   /<br>|<i>|<\/i>|<a.*?>|<\/a>/g,
                   "",
               )
@@ -89,7 +89,7 @@ export class MangaImplementation implements MangaProviding {
         const genres: Tag[] = [];
         for (const genre of mangaDetails.genres) {
             genres.push({
-                id: genre.replaceAll(" ", "-").toLowerCase(),
+                id: genre.replaceAll(" ", "_").toLowerCase(),
                 title: genre,
             });
         }
@@ -97,7 +97,7 @@ export class MangaImplementation implements MangaProviding {
         const tags: Tag[] = [];
         for (const tag of mangaDetails.tags) {
             genres.push({
-                id: tag.id.toString().replaceAll(" ", "-").toLowerCase(),
+                id: tag.id.toString().replaceAll(" ", "_").toLowerCase(),
                 title: tag.name,
             });
         }

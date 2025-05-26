@@ -1,14 +1,26 @@
 export const discoverSectionsAndSearchQuery = `
 query Query(
   $page: Int
+  $isAdult: Boolean
+  $onList: Boolean
   $countryOfOrigin: CountryCode
+  $isLicensed: Boolean
   $search: String
+  $startDateGreater: FuzzyDateInt
+  $startDateLesser: FuzzyDateInt
   $formatIn: [MediaFormat]
   $formatNotIn: [MediaFormat]
   $statusIn: [MediaStatus]
   $statusNotIn: [MediaStatus]
+  $chaptersGreater: Int
+  $chaptersLesser: Int
+  $volumesGreater: Int
+  $volumesLesser: Int
   $genreIn: [String]
   $genreNotIn: [String]
+  $tagIn: [String]
+  $tagNotIn: [String]
+  $sourceIn: [MediaSource]
   $sort: [MediaSort]
 ) {
   Page(page: $page, perPage: 50) {
@@ -17,14 +29,26 @@ query Query(
     }
     media(
       type: MANGA
+      isAdult: $isAdult
+      onList: $onList
       countryOfOrigin: $countryOfOrigin
+      isLicensed: $isLicensed
       search: $search
+      startDate_greater: $startDateGreater
+      startDate_lesser: $startDateLesser
       format_in: $formatIn
       format_not_in: $formatNotIn
       status_in: $statusIn
       status_not_in: $statusNotIn
+      chapters_greater: $chaptersGreater
+      chapters_lesser: $chaptersLesser
+      volumes_greater: $volumesGreater
+      volumes_lesser: $volumesLesser
       genre_in: $genreIn
       genre_not_in: $genreNotIn
+      tag_in: $tagIn
+      tag_not_in: $tagNotIn
+      source_in: $sourceIn
       sort: $sort
     ) {
       chapters
@@ -51,15 +75,27 @@ query Query(
 
 export type DiscoverSectionsAndSearchVariables = {
     page: number;
-    sort: string;
+    isAdult?: boolean;
+    onList?: boolean;
     countryOfOrigin?: string;
+    isLicensed?: boolean;
     search?: string;
-    format_in?: string[];
-    format_not_in?: string[];
-    status_in?: string[];
-    status_not_in?: string[];
-    genres_in?: string[];
-    genres_not_in?: string[];
+    startDateGreater?: number;
+    startDateLesser?: number;
+    formatIn?: string[];
+    formatNotIn?: string[];
+    statusIn?: string[];
+    statusNotIn?: string[];
+    chaptersGreater?: number;
+    chaptersLesser?: number;
+    volumesGreater?: number;
+    volumesLesser?: number;
+    genreIn?: string[];
+    genreNotIn?: string[];
+    tagIn?: string[];
+    tagNotIn?: string[];
+    sourceIn?: string[];
+    sort: string;
 };
 
 export type DiscoverSectionsAndSearch = {
