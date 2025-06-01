@@ -1,0 +1,64 @@
+import type { SearchResultItem, SortingOption } from "@paperback/types";
+import type {
+    MUSeriesSearchRequestV1,
+    MUSeriesSearchResponseV1,
+} from "./mu-api";
+import { getContentRating } from "./mu-manga";
+
+type ApiResult = Exclude<MUSeriesSearchResponseV1["results"], undefined>[0];
+
+export interface ResultInfo {
+    id: string;
+    title: string;
+    image: string;
+}
+
+export const SearchOrderBy: {
+    [Order in NonNullable<MUSeriesSearchRequestV1["orderby"]>]: Order;
+} = {
+    title: "title",
+    year: "year",
+    rating: "rating",
+    score: "score",
+    rank: "rank",
+    date_added: "date_added",
+    week_pos: "week_pos",
+    month1_pos: "month1_pos",
+    month3_pos: "month3_pos",
+    month6_pos: "month6_pos",
+    year_pos: "year_pos",
+    list_reading: "list_reading",
+    list_wish: "list_wish",
+    list_complete: "list_complete",
+    list_unfinished: "list_unfinished",
+};
+export function toSearchOrder(
+    sortingOption: SortingOption | undefined,
+): MUSeriesSearchRequestV1["orderby"] {
+    return sortingOption != null && sortingOption.id in SearchOrderBy
+        ? (sortingOption.id as MUSeriesSearchRequestV1["orderby"])
+        : undefined;
+}
+
+export function parseSearchResults(results: ApiResult[]): SearchResultItem[] {
+    return results
+        .map<SearchResultItem | null>((result) => {
+            const mangaId = result.record?.series_id;
+            const title = result.hit_title ?? result.record?.title;
+            const imageUrl = result.record?.image?.url?.original ?? "";
+            const contentRating =
+                result.record != null
+                    ? getContentRating(result.record)
+                    : undefined;
+
+            if (!mangaId || !title) {
+                console.log(
+                    `[parseSearchResults] ignoring invalid search result: ${JSON.stringify(result)}`,
+                );
+                return null;
+            }
+
+            return { mangaId: String(mangaId), title, imageUrl, contentRating };
+        })
+        .filter((info): info is SearchResultItem => info !== null);
+}
