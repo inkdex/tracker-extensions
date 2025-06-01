@@ -5,6 +5,7 @@ Paperback extensions for integrating with progress tracking services.
 ## Available Extensions
 
 - [AniList](https://anilist.co)
+- [MangaUpdates](https://mangaupdates.com)
 
 ## Installation
 
