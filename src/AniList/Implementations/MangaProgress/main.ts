@@ -65,10 +65,11 @@ export class MangaProgressImplementation implements MangaProgressProviding {
         }
 
         const lastReadChapter: Chapter = {
-            chapterId: String(mediaList.progress + 1),
+            chapterId: String(mediaList.progress),
             sourceManga,
             langCode: "unknown",
-            chapNum: mediaList.progress + 1,
+            chapNum: mediaList.progress,
+            volume: mediaList.progressVolumes,
         };
 
         const lastReadTime = new Date(0);
