@@ -13,9 +13,8 @@ export interface ResultInfo {
     image: string;
 }
 
-export const SearchOrderBy: {
-    [Order in NonNullable<MUSeriesSearchRequestV1["orderby"]>]: Order;
-} = {
+export const SearchOrderBy = {
+    none: "none",
     title: "title",
     year: "year",
     rating: "rating",
@@ -31,10 +30,15 @@ export const SearchOrderBy: {
     list_wish: "list_wish",
     list_complete: "list_complete",
     list_unfinished: "list_unfinished",
+} as const satisfies {
+    [Order in NonNullable<MUSeriesSearchRequestV1["orderby"]> & "none"]: Order;
 };
 export function toSearchOrder(
     sortingOption: SortingOption | undefined,
 ): MUSeriesSearchRequestV1["orderby"] {
+    if (sortingOption?.id === SearchOrderBy.none) {
+        return undefined;
+    }
     return sortingOption != null && sortingOption.id in SearchOrderBy
         ? (sortingOption.id as MUSeriesSearchRequestV1["orderby"])
         : undefined;

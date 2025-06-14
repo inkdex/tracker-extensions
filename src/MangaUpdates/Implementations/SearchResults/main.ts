@@ -185,8 +185,9 @@ export class SearchResultsImplementation
     async getSortingOptions(query: SearchQuery): Promise<SortingOption[]> {
         void query;
         return [
-            { id: SearchOrderBy.title, label: "Year" },
-            { id: SearchOrderBy.year, label: "Title" },
+            { id: SearchOrderBy.none, label: "Default" },
+            { id: SearchOrderBy.year, label: "Year" },
+            { id: SearchOrderBy.title, label: "Title" },
             { id: SearchOrderBy.rating, label: "Rating" },
         ];
     }
@@ -206,7 +207,7 @@ export class SearchResultsImplementation
                 page: metadata ?? 1,
                 perpage: 25,
                 search: query.title || undefined,
-                orderby: toSearchOrder(sortingOption) ?? "rating",
+                orderby: toSearchOrder(sortingOption),
             };
 
             if (body.page < 1) {
