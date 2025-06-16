@@ -168,6 +168,7 @@ export class SettingsForm extends Form {
         } catch (e) {
             console.log("[logout] failed to delete session token");
             console.log(e);
+            throw e;
         }
 
         clearSessionToken();
