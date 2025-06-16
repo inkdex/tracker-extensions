@@ -1,3 +1,28 @@
+/**
+ * MangaUpdates API types are auto-generated from the MangaUpdates OpenAPI
+ * specification.
+ *
+ * See https://api.mangaupdates.com for further details.
+ *
+ * You can update the API types by running the following command (update the
+ * generator package version as appropriate):
+ *
+ * ```sh
+ * npx swagger-typescript-api@13.1.3 generate \
+ *   --path='https://api.mangaupdates.com/openapi.yaml' \
+ *   --output='./src/MangaUpdates/Implementations/Shared/models' \
+ *   --name='api.ts' \
+ *   --type-prefix='MU' \
+ *   --route-types \
+ *   --responses \
+ *   --sort-routes \
+ *   --sort-types \
+ *   --no-client \
+ *   --debug && \
+ * sed -i 's/\/\/ @ts-nocheck//g' './src/MangaUpdates/Implementations/Shared/models/api.ts' && \
+ * npx prettier --write './src/MangaUpdates/Implementations/Shared/models/api.ts'
+ * ```
+ */
 import * as MU from "./api";
 
 type Stringable = string | number | boolean;
