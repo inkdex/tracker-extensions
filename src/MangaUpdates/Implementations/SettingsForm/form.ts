@@ -41,7 +41,7 @@ export class LoginForm extends Form {
                 {
                     id: "login-section",
                     header: "Log in",
-                    footer: "Use your MangaUpdates username and password to log in.",
+                    footer: "Use your MangaUpdates username and password to log in. Your password is only used for the initial login and is not stored by this extension.",
                 },
                 [
                     InputRow("username-input", {
