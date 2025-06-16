@@ -8,13 +8,9 @@ import {
     ProminentCarouselItem,
     SimpleCarouselItem,
 } from "@paperback/types";
-import { MUSeriesSearchRequestV1 } from "../../Helpers/mu-api";
-import {
-    ADULT_GENRES,
-    MATURE_GENRES,
-    parseMangaInfo,
-} from "../../Helpers/mu-manga";
-import { makeRequest } from "../../Helpers/mu-request";
+import { makeRequest } from "../../Services/Requests";
+import { MU } from "../Shared/models/main";
+import { manga } from "../Shared/parser/main";
 
 interface MangaUpdatesDiscoverSectionItem
     extends Omit<FeaturedCarouselItem, "type">,
@@ -63,13 +59,13 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
     ): Promise<PagedResults<DiscoverSectionItem>> {
         const logPrefix = "[getDiscoverSectionItems]";
 
-        const body: MUSeriesSearchRequestV1 & {
+        const body: MU.MUSeriesSearchRequestV1 & {
             page: number;
             perpage: number;
         } = {
             page: metadata ?? 1,
             perpage: 20,
-            exclude_genre: [...ADULT_GENRES, ...MATURE_GENRES],
+            exclude_genre: manga.unsafeGenres,
         };
 
         if (body.page < 0) {
@@ -114,7 +110,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
             const items = results
                 .filter((r) => r != null)
                 .map((r) => ({
-                    ...parseMangaInfo(r),
+                    ...manga.parseMangaInfo(r),
                     mangaId: String(r.series_id ?? ""),
                 }))
                 .map((m) => {

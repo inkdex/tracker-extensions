@@ -1,5 +1,5 @@
-import type * as MU from "./mu-models";
-import { assertMustBeAuthenticated, getSessionToken } from "./mu-session";
+import type * as MU from "../Implementations/Shared/models/main";
+import { session } from "../Implementations/Shared/parser/main";
 
 export function loggableRequest(request: Partial<MU.BaseRequest>): string {
     let censoredRequest = request;
@@ -96,8 +96,8 @@ export async function makeRequest<
         headers["content-type"] = "application/json";
     }
     if (!isLogin) {
-        assertMustBeAuthenticated();
-        const sessionToken = getSessionToken()!;
+        session.assertMustBeAuthenticated();
+        const sessionToken = session.getSessionToken()!;
         headers.authorization = `Bearer ${sessionToken}`;
     }
 

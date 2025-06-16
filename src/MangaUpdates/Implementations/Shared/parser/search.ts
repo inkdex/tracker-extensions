@@ -1,11 +1,8 @@
 import type { SearchResultItem, SortingOption } from "@paperback/types";
-import type {
-    MUSeriesSearchRequestV1,
-    MUSeriesSearchResponseV1,
-} from "./mu-api";
-import { getContentRating } from "./mu-manga";
+import type { MU } from "../models/main";
+import { getContentRating } from "./manga";
 
-type ApiResult = Exclude<MUSeriesSearchResponseV1["results"], undefined>[0];
+type ApiResult = Exclude<MU.MUSeriesSearchResponseV1["results"], undefined>[0];
 
 export interface ResultInfo {
     id: string;
@@ -31,16 +28,17 @@ export const SearchOrderBy = {
     list_complete: "list_complete",
     list_unfinished: "list_unfinished",
 } as const satisfies {
-    [Order in NonNullable<MUSeriesSearchRequestV1["orderby"]> & "none"]: Order;
+    [Order in NonNullable<MU.MUSeriesSearchRequestV1["orderby"]> &
+        "none"]: Order;
 };
 export function toSearchOrder(
     sortingOption: SortingOption | undefined,
-): MUSeriesSearchRequestV1["orderby"] {
+): MU.MUSeriesSearchRequestV1["orderby"] {
     if (sortingOption?.id === SearchOrderBy.none) {
         return undefined;
     }
     return sortingOption != null && sortingOption.id in SearchOrderBy
-        ? (sortingOption.id as MUSeriesSearchRequestV1["orderby"])
+        ? (sortingOption.id as MU.MUSeriesSearchRequestV1["orderby"])
         : undefined;
 }
 
