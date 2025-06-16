@@ -1,6 +1,6 @@
 import { MangaProviding, SourceManga } from "@paperback/types";
-import { parseMangaInfo } from "../../Helpers/mu-manga";
-import { makeRequest } from "../../Helpers/mu-request";
+import { makeRequest } from "../../Services/Requests";
+import { manga } from "../Shared/parser/main";
 
 export class MangaImplementation implements MangaProviding {
     async getMangaDetails(mangaId: string): Promise<SourceManga> {
@@ -14,7 +14,7 @@ export class MangaImplementation implements MangaProviding {
 
         const result = {
             mangaId,
-            mangaInfo: parseMangaInfo(series),
+            mangaInfo: manga.parseMangaInfo(series),
         };
         console.log(`${logPrefix} complete: ${JSON.stringify(result)}`);
 

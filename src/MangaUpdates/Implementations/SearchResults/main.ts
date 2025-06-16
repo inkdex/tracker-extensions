@@ -6,15 +6,10 @@ import {
     SearchResultsProviding,
     SortingOption,
 } from "@paperback/types";
-import { MUSeriesSearchRequestV1 } from "../../Helpers/mu-api";
-import { ADULT_GENRES, MATURE_GENRES } from "../../Helpers/mu-manga";
-import { makeRequest } from "../../Helpers/mu-request";
-import {
-    parseSearchResults,
-    SearchOrderBy,
-    toSearchOrder,
-} from "../../Helpers/mu-search";
+import { makeRequest } from "../../Services/Requests";
 import { MangaImplementation } from "../Manga/main";
+import { MU } from "../Shared/models/main";
+import { manga, search } from "../Shared/parser/main";
 
 const TYPE_LIST = [
     "Artbook",
@@ -47,7 +42,7 @@ const STATUS_LIST = [
     { id: "some_releases", value: "Only show manga with at least one release" },
     { id: "no_releases", value: "Only show manga with no releases" },
 ] satisfies Array<{
-    id: NonNullable<MUSeriesSearchRequestV1["filters"]>[number];
+    id: NonNullable<MU.MUSeriesSearchRequestV1["filters"]>[number];
     value: string;
 }>;
 
@@ -125,10 +120,7 @@ export class SearchResultsImplementation
                         value: g.genre!,
                     })),
                 value: Object.fromEntries(
-                    [...ADULT_GENRES, ...MATURE_GENRES].map((id) => [
-                        id,
-                        "excluded",
-                    ]),
+                    manga.unsafeGenres.map((id) => [id, "excluded"]),
                 ),
                 allowExclusion: true,
                 allowEmptySelection: true,
@@ -185,10 +177,10 @@ export class SearchResultsImplementation
     async getSortingOptions(query: SearchQuery): Promise<SortingOption[]> {
         void query;
         return [
-            { id: SearchOrderBy.none, label: "Default" },
-            { id: SearchOrderBy.year, label: "Year" },
-            { id: SearchOrderBy.title, label: "Title" },
-            { id: SearchOrderBy.rating, label: "Rating" },
+            { id: search.SearchOrderBy.none, label: "Default" },
+            { id: search.SearchOrderBy.year, label: "Year" },
+            { id: search.SearchOrderBy.title, label: "Title" },
+            { id: search.SearchOrderBy.rating, label: "Rating" },
         ];
     }
 
@@ -200,14 +192,14 @@ export class SearchResultsImplementation
         const logPrefix = "[getSearchResults]";
         console.log(`${logPrefix} starts`);
         try {
-            const body: MUSeriesSearchRequestV1 & {
+            const body: MU.MUSeriesSearchRequestV1 & {
                 page: number;
                 perpage: number;
             } = {
                 page: metadata ?? 1,
                 perpage: 25,
                 search: query.title || undefined,
-                orderby: toSearchOrder(sortingOption),
+                orderby: search.toSearchOrder(sortingOption),
             };
 
             if (body.page < 1) {
@@ -253,7 +245,7 @@ export class SearchResultsImplementation
                         body.filters = getMultiSelection(
                             filter.value,
                             "included",
-                        ) as MUSeriesSearchRequestV1["filters"];
+                        ) as MU.MUSeriesSearchRequestV1["filters"];
                         break;
                     case Filter.list:
                         if (typeof filter.value === "string" && filter.value) {
@@ -273,7 +265,7 @@ export class SearchResultsImplementation
                 body,
             });
 
-            const results = parseSearchResults(response.results || []);
+            const results = search.parseSearchResults(response.results || []);
             const hasNextPage =
                 body.page * body.perpage < (response.total_hits ?? 0);
             const nextPage = hasNextPage ? body.page + 1 : -1;

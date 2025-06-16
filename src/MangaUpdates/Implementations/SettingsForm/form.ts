@@ -7,13 +7,8 @@ import {
     NavigationRow,
     Section,
 } from "@paperback/types";
-import { makeRequest } from "../../Helpers/mu-request";
-import {
-    clearSessionToken,
-    getSessionInfo,
-    Session,
-    setSessionToken,
-} from "../../Helpers/mu-session";
+import { makeRequest } from "../../Services/Requests";
+import { session } from "../Shared/parser/main";
 
 interface LoginInput {
     username: string;
@@ -96,7 +91,7 @@ export class LoginForm extends Form {
                 throw new Error("no session token on response");
             }
 
-            setSessionToken(sessionToken);
+            session.setSessionToken(sessionToken);
 
             console.log(`${logPrefix} complete`);
         } catch (e) {
@@ -113,12 +108,12 @@ export class LoginForm extends Form {
 
 export class SettingsForm extends Form {
     override getSections(): FormSectionElement[] {
-        const session = getSessionInfo();
-        if (session == null) {
+        const info = session.getSessionInfo();
+        if (info == null) {
             return this.unauthenticatedView();
         }
 
-        return this.authenticatedView(session);
+        return this.authenticatedView(info);
     }
 
     unauthenticatedView(): FormSectionElement[] {
@@ -132,20 +127,20 @@ export class SettingsForm extends Form {
         ];
     }
 
-    authenticatedView(session: Session): FormSectionElement[] {
+    authenticatedView(info: session.Session): FormSectionElement[] {
         return [
             Section({ id: "profile-section", header: "Profile" }, [
                 LabelRow("user-name", {
                     title: "Logged in as",
-                    value: session.username,
+                    value: info.username,
                 }),
                 LabelRow("login-time", {
                     title: "Session started at",
-                    value: session.loginTime,
+                    value: info.loginTime,
                 }),
                 LabelRow("session-id", {
                     title: "Session ID",
-                    value: session.sessionId,
+                    value: info.sessionId,
                 }),
             ]),
             Section({ id: "session-section" }, [
@@ -171,7 +166,7 @@ export class SettingsForm extends Form {
             throw e;
         }
 
-        clearSessionToken();
+        session.clearSessionToken();
 
         this.reloadForm();
     }

@@ -7,16 +7,16 @@ import {
     SourceManga,
     TrackedMangaChapterReadAction,
 } from "@paperback/types";
-import { MUListsSeriesModelUpdateV1 } from "../../Helpers/mu-api";
-import { makeRequest } from "../../Helpers/mu-request";
-import { assertMustBeAuthenticated } from "../../Helpers/mu-session";
+import { makeRequest } from "../../Services/Requests";
+import { MU } from "../Shared/models/main";
+import { session } from "../Shared/parser/main";
 import { MangaProgressForm } from "./form";
 
 interface ParsedAction {
     ids: string[];
     type: "update" | "addition" | "noop";
     actions: TrackedMangaChapterReadAction[];
-    payload: MUListsSeriesModelUpdateV1;
+    payload: MU.MUListsSeriesModelUpdateV1;
 }
 
 interface ParsedActionError {
@@ -32,14 +32,14 @@ export class MangaProgressImplementation implements MangaProgressProviding {
     async getMangaProgressManagementForm(
         sourceManga: SourceManga,
     ): Promise<Form> {
-        assertMustBeAuthenticated();
+        session.assertMustBeAuthenticated();
         return new MangaProgressForm(sourceManga.mangaId);
     }
 
     async getMangaProgress(
         sourceManga: SourceManga,
     ): Promise<MangaProgress | undefined> {
-        assertMustBeAuthenticated();
+        session.assertMustBeAuthenticated();
 
         const logPrefix = "[getMangaProgress]";
         console.log(`${logPrefix} start: ${sourceManga.mangaId}`);

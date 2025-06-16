@@ -8,9 +8,8 @@ import {
     SelectRow,
     StepperRow,
 } from "@paperback/types";
-import { parseMangaInfo } from "../../Helpers/mu-manga";
-import { makeRequest } from "../../Helpers/mu-request";
-import { assertMustBeAuthenticated } from "../../Helpers/mu-session";
+import { makeRequest } from "../../Services/Requests";
+import { manga, session } from "../Shared/parser/main";
 
 interface FormState {
     title: string;
@@ -122,7 +121,7 @@ export class MangaProgressForm extends Form {
     }
 
     override formWillAppear(): void {
-        assertMustBeAuthenticated();
+        session.assertMustBeAuthenticated();
         void this.loadData();
     }
 
@@ -304,7 +303,7 @@ export class MangaProgressForm extends Form {
                 ]);
             console.log(`${logPrefix} data fetch complete: ${this.mangaId}`);
 
-            const parsed = parseMangaInfo(mangaInfo);
+            const parsed = manga.parseMangaInfo(mangaInfo);
 
             this.initialState = {
                 title: parsed.primaryTitle,

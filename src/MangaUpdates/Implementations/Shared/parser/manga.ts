@@ -1,8 +1,10 @@
 import { ContentRating, type MangaInfo } from "@paperback/types";
-import type { MUSeriesModelV1 } from "./mu-api";
+import type { MU } from "../models/main";
 
-export const ADULT_GENRES = ["Adult", "Hentai", "Smut"];
-export const MATURE_GENRES = ["Ecchi"];
+const ADULT_GENRES = ["Adult", "Hentai", "Smut"];
+const MATURE_GENRES = ["Ecchi"];
+
+export const unsafeGenres = [...ADULT_GENRES, ...MATURE_GENRES];
 
 function parseStatus(
     status: string,
@@ -53,7 +55,7 @@ function parseStatus(
     return "UNKNOWN";
 }
 
-export function getContentRating(manga: MUSeriesModelV1): ContentRating {
+export function getContentRating(manga: MU.MUSeriesModelV1): ContentRating {
     const genres = (manga.genres ?? [])
         .map((g) => g.genre)
         .filter((g) => g != null);
@@ -69,7 +71,7 @@ export function getContentRating(manga: MUSeriesModelV1): ContentRating {
     return ContentRating.EVERYONE;
 }
 
-export function parseMangaInfo(series: MUSeriesModelV1): MangaInfo {
+export function parseMangaInfo(series: MU.MUSeriesModelV1): MangaInfo {
     const titles = [
         series.title,
         ...(series.associated || []).map((associated) => associated?.title),
