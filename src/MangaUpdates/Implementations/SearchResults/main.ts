@@ -9,7 +9,8 @@ import {
 import { makeRequest } from "../../Services/Requests";
 import { MangaImplementation } from "../Manga/main";
 import { MU } from "../Shared/models/main";
-import { manga, search } from "../Shared/parser/main";
+import { manga } from "../Shared/parser/main";
+import * as search from "./parser";
 
 const TYPE_LIST = [
     "Artbook",
