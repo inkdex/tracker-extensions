@@ -1,6 +1,6 @@
 import type { SearchResultItem, SortingOption } from "@paperback/types";
-import type { MU } from "../models/main";
-import { getContentRating } from "./manga";
+import type { MU } from "../Shared/models/main";
+import { manga } from "../Shared/parser/main";
 
 type ApiResult = Exclude<MU.MUSeriesSearchResponseV1["results"], undefined>[0];
 
@@ -50,7 +50,7 @@ export function parseSearchResults(results: ApiResult[]): SearchResultItem[] {
             const imageUrl = result.record?.image?.url?.original ?? "";
             const contentRating =
                 result.record != null
-                    ? getContentRating(result.record)
+                    ? manga.getContentRating(result.record)
                     : undefined;
 
             if (!mangaId || !title) {
