@@ -12,6 +12,7 @@ import {
     TitleViewQueryVariables,
 } from "../../GraphQL/TitleView";
 import makeRequest from "../../Services/Requests";
+import { getSynonyms } from "../SettingsForm/form";
 
 export class MangaImplementation implements MangaProviding {
     async getMangaDetails(mangaId: string): Promise<SourceManga> {
@@ -27,12 +28,18 @@ export class MangaImplementation implements MangaProviding {
 
         const mangaDetails = json.Media;
 
-        const synopsis = mangaDetails.description
+        let synopsis = mangaDetails.description
             ? mangaDetails.description.replaceAll(
                   /<br>|<i>|<\/i>|<a.*?>|<\/a>/g,
                   "",
               )
             : "No description";
+        synopsis +=
+            mangaDetails.synonyms.length > 0
+                ? "\n\n[Synonyms: " +
+                  mangaDetails.synonyms.toLocaleString().replaceAll(",", ", ") +
+                  "]\n\n"
+                : "";
 
         const secondaryTitles = [];
         for (const title of Object.values(mangaDetails.title)) {
@@ -41,6 +48,26 @@ export class MangaImplementation implements MangaProviding {
             }
 
             secondaryTitles.push(title);
+        }
+        for (const synonym of mangaDetails.synonyms) {
+            if (synonym == undefined) {
+                continue;
+            }
+
+            secondaryTitles.push(synonym);
+        }
+
+        let primaryTitle =
+            mangaDetails.title.english ??
+            mangaDetails.title.romaji ??
+            mangaDetails.title.native ??
+            "No Title";
+        if (
+            getSynonyms == true &&
+            mangaDetails.synonyms.length > 0 &&
+            !mangaDetails.title.english
+        ) {
+            primaryTitle += "\n" + mangaDetails.synonyms[0];
         }
 
         let status;
@@ -133,7 +160,7 @@ export class MangaImplementation implements MangaProviding {
             mangaInfo: {
                 thumbnailUrl: mangaDetails.coverImage.extraLarge,
                 synopsis,
-                primaryTitle: secondaryTitles[0] ?? "No Title",
+                primaryTitle,
                 secondaryTitles,
                 contentRating,
                 status,

@@ -32,6 +32,7 @@ query Query($id: Int) {
       native
       romaji
     }
+    synonyms
   }
 }
 `;
@@ -56,6 +57,7 @@ type TitleViewMedia = {
     status: string;
     tags: TitleViewTag[];
     title: TitleViewTitle;
+    synonyms: string[];
 };
 
 type TitleViewCoverImage = {

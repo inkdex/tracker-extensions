@@ -12,9 +12,13 @@ import {
     OAuthButtonRow,
     OAuthButtonRowProps,
     Section,
+    ToggleRow,
+    ToggleRowProps,
 } from "@paperback/types";
 import { JwtPayload, Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
+
+export const getSynonyms = Boolean(Application.getState("synonyms-enabled"));
 
 export class SettingsForm extends Form {
     override getSections(): FormSectionElement[] {
@@ -27,6 +31,7 @@ export class SettingsForm extends Form {
                 this.profileViewNavigation(),
                 this.logOutButton(),
             ]),
+            Section("settings", [this.synonymsToggle()]),
         ];
     }
 
@@ -66,6 +71,25 @@ export class SettingsForm extends Form {
         };
 
         return ButtonRow("log-out", logOutButtonProps);
+    }
+
+    synonymsToggle() {
+        const synonymsToggleProps: ToggleRowProps = {
+            title: "Enable Synonyms as part of title",
+            value: getSynonyms ?? false,
+            onValueChange: Application.Selector(
+                this as SettingsForm,
+                "handleSynonymsToggle",
+            ),
+        };
+
+        return ToggleRow("synonyms", synonymsToggleProps);
+    }
+
+    async handleSynonymsToggle(value: boolean): Promise<void> {
+        Application.setState(value, "synonyms-enabled");
+        Application.invalidateDiscoverSections();
+        this.reloadForm();
     }
 
     async handleLoginSuccess(accessToken: string): Promise<void> {
