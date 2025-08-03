@@ -12,7 +12,7 @@ import {
     TitleViewQueryVariables,
 } from "../../GraphQL/TitleView";
 import makeRequest from "../../Services/Requests";
-import { getSynonyms } from "../SettingsForm/form";
+import { getSynonymsSetting } from "../SettingsForm/form";
 
 export class MangaImplementation implements MangaProviding {
     async getMangaDetails(mangaId: string): Promise<SourceManga> {
@@ -36,9 +36,9 @@ export class MangaImplementation implements MangaProviding {
             : "No description";
         synopsis +=
             mangaDetails.synonyms.length > 0
-                ? "\n\n[Synonyms: " +
+                ? "\n\nSynonyms: " +
                   mangaDetails.synonyms.toLocaleString().replaceAll(",", ", ") +
-                  "]\n\n"
+                  "\n\n"
                 : "";
 
         const secondaryTitles = [];
@@ -50,10 +50,6 @@ export class MangaImplementation implements MangaProviding {
             secondaryTitles.push(title);
         }
         for (const synonym of mangaDetails.synonyms) {
-            if (synonym == undefined) {
-                continue;
-            }
-
             secondaryTitles.push(synonym);
         }
 
@@ -63,7 +59,7 @@ export class MangaImplementation implements MangaProviding {
             mangaDetails.title.native ??
             "No Title";
         if (
-            getSynonyms == true &&
+            getSynonymsSetting == true &&
             mangaDetails.synonyms.length > 0 &&
             !mangaDetails.title.english
         ) {
