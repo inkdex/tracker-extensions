@@ -19,7 +19,7 @@ import { JwtPayload, Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 
 export const getSynonymsSetting = Boolean(
-    Application.getState("synonyms-enabled"),
+    Application.getState("setting-synonyms-in-titles"),
 );
 
 export class SettingsForm extends Form {
@@ -89,7 +89,7 @@ export class SettingsForm extends Form {
     }
 
     async handleSynonymsToggle(value: boolean): Promise<void> {
-        Application.setState(value, "synonyms-enabled");
+        Application.setState(value, "setting-synonyms-in-titles");
         Application.invalidateDiscoverSections();
         this.reloadForm();
     }
