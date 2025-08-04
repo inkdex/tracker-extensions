@@ -68,6 +68,7 @@ query Query(
         romaji
       }
       volumes
+      synonyms
     }
   }
 }
@@ -121,6 +122,7 @@ type DiscoverSectionsAndSearchMedia = {
     status: string;
     title: DiscoverSectionsAndSearchTitle;
     volumes: number | null;
+    synonyms: string[];
 };
 
 type DiscoverSectionsAndSearchCoverImage = {

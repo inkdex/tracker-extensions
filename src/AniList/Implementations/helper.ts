@@ -5,6 +5,7 @@ import {
 } from "../GraphQL/DiscoverSectionsAndSearch";
 import { MediaFormat, MediaStatus } from "../GraphQL/General";
 import makeRequest from "../Services/Requests";
+import { getSynonymsSetting } from "./SettingsForm/form";
 
 export async function getItems<ResultItemType>(
     query: string,
@@ -35,6 +36,13 @@ export async function getItems<ResultItemType>(
             searchResult.title.romaji ??
             searchResult.title.native ??
             "No Title";
+        if (
+            getSynonymsSetting == true &&
+            searchResult.synonyms.length > 0 &&
+            !searchResult.title.english
+        ) {
+            title += " / " + searchResult.synonyms[0];
+        }
 
         const contentRating: ContentRating = searchResult.isAdult
             ? ContentRating.ADULT

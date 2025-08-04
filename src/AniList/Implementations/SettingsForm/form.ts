@@ -12,9 +12,15 @@ import {
     OAuthButtonRow,
     OAuthButtonRowProps,
     Section,
+    ToggleRow,
+    ToggleRowProps,
 } from "@paperback/types";
 import { JwtPayload, Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
+
+export const getSynonymsSetting = Boolean(
+    Application.getState("setting-synonyms-in-titles"),
+);
 
 export class SettingsForm extends Form {
     override getSections(): FormSectionElement[] {
@@ -27,6 +33,7 @@ export class SettingsForm extends Form {
                 this.profileViewNavigation(),
                 this.logOutButton(),
             ]),
+            Section("settings", [this.synonymsToggle()]),
         ];
     }
 
@@ -66,6 +73,25 @@ export class SettingsForm extends Form {
         };
 
         return ButtonRow("log-out", logOutButtonProps);
+    }
+
+    synonymsToggle() {
+        const synonymsToggleProps: ToggleRowProps = {
+            title: "Display title synonyms if the title is not in English",
+            value: getSynonymsSetting ?? false,
+            onValueChange: Application.Selector(
+                this as SettingsForm,
+                "handleSynonymsToggle",
+            ),
+        };
+
+        return ToggleRow("synonyms", synonymsToggleProps);
+    }
+
+    async handleSynonymsToggle(value: boolean): Promise<void> {
+        Application.setState(value, "setting-synonyms-in-titles");
+        Application.invalidateDiscoverSections();
+        this.reloadForm();
     }
 
     async handleLoginSuccess(accessToken: string): Promise<void> {
