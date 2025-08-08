@@ -37,7 +37,7 @@ export async function getItems<ResultItemType>(
             searchResult.title.native ??
             "No Title";
         if (
-            getSynonymsSetting == true &&
+            getSynonymsSetting() == true &&
             searchResult.synonyms.length > 0 &&
             !searchResult.title.english
         ) {
