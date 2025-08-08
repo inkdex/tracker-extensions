@@ -18,9 +18,9 @@ import {
 import { JwtPayload, Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 
-export const getSynonymsSetting = Boolean(
-    Application.getState("setting-synonyms-in-titles"),
-);
+export function getSynonymsSetting(): boolean {
+    return Application.getState("setting-synonyms-in-titles") as boolean;
+}
 
 export class SettingsForm extends Form {
     override getSections(): FormSectionElement[] {
@@ -78,7 +78,7 @@ export class SettingsForm extends Form {
     synonymsToggle() {
         const synonymsToggleProps: ToggleRowProps = {
             title: "Display title synonyms if the title is not in English",
-            value: getSynonymsSetting ?? false,
+            value: getSynonymsSetting() ?? false,
             onValueChange: Application.Selector(
                 this as SettingsForm,
                 "handleSynonymsToggle",

@@ -59,7 +59,7 @@ export class MangaImplementation implements MangaProviding {
             mangaDetails.title.native ??
             "No Title";
         if (
-            getSynonymsSetting == true &&
+            getSynonymsSetting() == true &&
             mangaDetails.synonyms.length > 0 &&
             !mangaDetails.title.english
         ) {

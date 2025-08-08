@@ -56,7 +56,9 @@ export class TrackingForm extends Form {
             TitleProgressQueryVeriables
         >(titleProgressQuery, true, queryVariables)
             .then((titleProgress) => {
-                this.titleProgress = titleProgress;
+                if (!this.titleProgress) {
+                    this.titleProgress = titleProgress;
+                }
             })
             .catch((error: Error) => {
                 if (!error?.toString().includes("[404]")) {
@@ -212,7 +214,7 @@ export class TrackingForm extends Form {
         const statusProps: SelectRowProps = {
             title: "Status",
             value: [titleProgress.status.toString()],
-            minItemCount: 0,
+            minItemCount: 1,
             maxItemCount: 1,
             options: statusOptions,
             onValueChange: Application.Selector(
