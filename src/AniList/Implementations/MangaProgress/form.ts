@@ -94,7 +94,9 @@ export class TrackingForm extends Form {
                     MediaList: newTitleProgressMediaList,
                 };
 
-                this.titleProgress = newTitleProgress;
+                if (!this.titleProgress) {
+                    this.titleProgress = newTitleProgress;
+                }
             })
             .finally(() => {
                 this.reloadForm();
