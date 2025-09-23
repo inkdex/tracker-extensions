@@ -12,6 +12,8 @@ import {
     OAuthButtonRow,
     OAuthButtonRowProps,
     Section,
+    SelectRow,
+    SelectRowProps,
     ToggleRow,
     ToggleRowProps,
 } from "@paperback/types";
@@ -20,6 +22,15 @@ import makeRequest from "../../Services/Requests";
 
 export function getSynonymsSetting(): boolean {
     return Application.getState("setting-synonyms-in-titles") as boolean;
+}
+
+export function getPreferredTitleSetting(): "romaji" | "english" | "native" {
+    return (
+        (Application.getState("setting-title-language") as
+            | "romaji"
+            | "english"
+            | "native") || "english"
+    );
 }
 
 export class SettingsForm extends Form {
@@ -33,7 +44,7 @@ export class SettingsForm extends Form {
                 this.profileViewNavigation(),
                 this.logOutButton(),
             ]),
-            Section("settings", [this.synonymsToggle()]),
+            Section("settings", [this.synonymsToggle(), this.preferredTitle()]),
         ];
     }
 
@@ -88,8 +99,34 @@ export class SettingsForm extends Form {
         return ToggleRow("synonyms", synonymsToggleProps);
     }
 
+    preferredTitle() {
+        const titleSettingProps: SelectRowProps = {
+            title: "Display title in",
+            value: [getPreferredTitleSetting()],
+            minItemCount: 1,
+            maxItemCount: 1,
+            options: [
+                { id: "romaji", title: "Romaji" },
+                { id: "english", title: "English" },
+                { id: "native", title: "Native" },
+            ],
+            onValueChange: Application.Selector(
+                this as SettingsForm,
+                "handleTitleSettingChange",
+            ),
+        };
+
+        return SelectRow("title", titleSettingProps);
+    }
+
     async handleSynonymsToggle(value: boolean): Promise<void> {
         Application.setState(value, "setting-synonyms-in-titles");
+        Application.invalidateDiscoverSections();
+        this.reloadForm();
+    }
+
+    async handleTitleSettingChange(value: string[]): Promise<void> {
+        Application.setState(value[0], "setting-title-language");
         Application.invalidateDiscoverSections();
         this.reloadForm();
     }

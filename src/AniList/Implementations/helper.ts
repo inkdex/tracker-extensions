@@ -5,7 +5,45 @@ import {
 } from "../GraphQL/DiscoverSectionsAndSearch";
 import { MediaFormat, MediaStatus } from "../GraphQL/General";
 import makeRequest from "../Services/Requests";
-import { getSynonymsSetting } from "./SettingsForm/form";
+import {
+    getPreferredTitleSetting,
+    getSynonymsSetting,
+} from "./SettingsForm/form";
+
+// Reusable helper to pick the preferred title with robust fallbacks
+export type AniListTitle = {
+    english?: string | null;
+    romaji?: string | null;
+    native?: string | null;
+};
+
+export type PreferredTitle = {
+    text: string;
+    language: "english" | "romaji" | "native" | "none";
+};
+
+export function getPreferredTitle(title: AniListTitle): PreferredTitle {
+    const pref = getPreferredTitleSetting(); // "romaji" | "english" | "native"
+    const order: Array<"english" | "romaji" | "native"> = (() => {
+        switch (pref) {
+            case "english":
+                return ["english", "romaji", "native"];
+            case "romaji":
+                return ["romaji", "english", "native"];
+            case "native":
+                return ["native", "english", "romaji"];
+        }
+    })();
+
+    for (const lang of order) {
+        const value = (title?.[lang] ?? "").toString().trim();
+        if (value.length > 0 && value.toLowerCase() !== "null") {
+            return { text: value, language: lang };
+        }
+    }
+
+    return { text: "No title", language: "none" };
+}
 
 export async function getItems<ResultItemType>(
     query: string,
@@ -31,15 +69,12 @@ export async function getItems<ResultItemType>(
                 title += "(" + MediaFormat.ONE_SHOT.label + ") ";
         }
 
-        title +=
-            searchResult.title.english ??
-            searchResult.title.romaji ??
-            searchResult.title.native ??
-            "No Title";
+        const picked = getPreferredTitle(searchResult.title);
+        title += picked.text;
         if (
-            getSynonymsSetting() == true &&
+            getSynonymsSetting() === true &&
             searchResult.synonyms.length > 0 &&
-            !searchResult.title.english
+            picked.language !== "english"
         ) {
             title += " / " + searchResult.synonyms[0];
         }

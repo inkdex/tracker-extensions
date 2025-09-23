@@ -12,6 +12,7 @@ import {
     TitleViewQueryVariables,
 } from "../../GraphQL/TitleView";
 import makeRequest from "../../Services/Requests";
+import { getPreferredTitle } from "../helper";
 import { getSynonymsSetting } from "../SettingsForm/form";
 
 export class MangaImplementation implements MangaProviding {
@@ -53,15 +54,12 @@ export class MangaImplementation implements MangaProviding {
             secondaryTitles.push(synonym);
         }
 
-        let primaryTitle =
-            mangaDetails.title.english ??
-            mangaDetails.title.romaji ??
-            mangaDetails.title.native ??
-            "No Title";
+        const picked = getPreferredTitle(mangaDetails.title);
+        let primaryTitle = picked.text;
         if (
-            getSynonymsSetting() == true &&
+            getSynonymsSetting() === true &&
             mangaDetails.synonyms.length > 0 &&
-            !mangaDetails.title.english
+            picked.language !== "english"
         ) {
             primaryTitle += "\n" + mangaDetails.synonyms[0];
         }
@@ -119,7 +117,7 @@ export class MangaImplementation implements MangaProviding {
 
         const tags: Tag[] = [];
         for (const tag of mangaDetails.tags) {
-            genres.push({
+            tags.push({
                 id: tag.id.toString().replaceAll(" ", "_").toLowerCase(),
                 title: tag.name,
             });
