@@ -140,7 +140,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
                 `${logPrefix} failed: ${section.id}, page=${body.page}`,
             );
             console.log(e);
-            return { items: [], metadata: -1 };
+            throw e;
         }
     }
 }
