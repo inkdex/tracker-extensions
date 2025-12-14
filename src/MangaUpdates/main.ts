@@ -8,32 +8,33 @@ import { SettingsFormImplementation } from "./Implementations/SettingsForm/main"
 import MangaUpdatesInterceptor from "./Services/Interceptor";
 
 export interface MangaUpdatesImplementation
-    extends DiscoverSectionImplementation,
-        MangaImplementation,
-        MangaProgressImplementation,
-        SearchResultsImplementation,
-        SettingsFormImplementation {}
-
-export class MangaUpdatesExtension implements Extension {
-    mainRateLimiter = new BasicRateLimiter("main", {
-        numberOfRequests: 5,
-        bufferInterval: 1,
-        ignoreImages: true,
-    });
-    mainInterceptor = new MangaUpdatesInterceptor("main");
-
-    async initialise(): Promise<void> {
-        this.mainRateLimiter.registerInterceptor();
-        this.mainInterceptor.registerInterceptor();
-    }
-}
-
-applyMixins(MangaUpdatesExtension, [
-    SettingsFormImplementation,
-    SearchResultsImplementation,
+  extends
     DiscoverSectionImplementation,
     MangaImplementation,
     MangaProgressImplementation,
+    SearchResultsImplementation,
+    SettingsFormImplementation {}
+
+export class MangaUpdatesExtension implements Extension {
+  mainRateLimiter = new BasicRateLimiter("main", {
+    numberOfRequests: 5,
+    bufferInterval: 1,
+    ignoreImages: true,
+  });
+  mainInterceptor = new MangaUpdatesInterceptor("main");
+
+  async initialise(): Promise<void> {
+    this.mainRateLimiter.registerInterceptor();
+    this.mainInterceptor.registerInterceptor();
+  }
+}
+
+applyMixins(MangaUpdatesExtension, [
+  SettingsFormImplementation,
+  SearchResultsImplementation,
+  DiscoverSectionImplementation,
+  MangaImplementation,
+  MangaProgressImplementation,
 ]);
 
 export const MangaUpdates = new MangaUpdatesExtension();
