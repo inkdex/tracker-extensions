@@ -1,4 +1,4 @@
-import { BasicRateLimiter, Extension } from "@paperback/types";
+import { BasicRateLimiter } from "@paperback/types";
 import { DiscoverSectionImplementation } from "./Implementations/DiscoverSection/main";
 import { applyMixins } from "./Implementations/helper";
 import { MangaImplementation } from "./Implementations/Manga/main";
@@ -15,7 +15,7 @@ export interface AniListImplementation
     MangaImplementation,
     MangaProgressImplementation {}
 
-export class AniListExtension implements Extension {
+export class AniListExtension {
   mainRateLimiter = new BasicRateLimiter("main", {
     numberOfRequests: 1,
     bufferInterval: 2,
