@@ -1,4 +1,4 @@
-import { BasicRateLimiter } from "@paperback/types";
+import { BasicRateLimiter, Extension, MangaProviding } from "@paperback/types";
 import { DiscoverSectionImplementation } from "./Implementations/DiscoverSection/main";
 import { applyMixins } from "./Implementations/helper";
 import { MangaImplementation } from "./Implementations/Manga/main";
@@ -15,7 +15,7 @@ export interface MangaUpdatesImplementation
     SearchResultsImplementation,
     SettingsFormImplementation {}
 
-export class MangaUpdatesExtension {
+export class MangaUpdatesExtension implements Omit<Extension, keyof MangaProviding> {
   mainRateLimiter = new BasicRateLimiter("main", {
     numberOfRequests: 5,
     bufferInterval: 1,
