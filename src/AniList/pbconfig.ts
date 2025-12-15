@@ -3,7 +3,7 @@ import { ContentRating, ExtensionInfo, SourceIntents } from "@paperback/types";
 export default {
   name: "AniList",
   description: "Extension that integrates with anilist.co for tracking and collection management.",
-  version: "1.0.0-alpha.10",
+  version: "1.0.0-alpha.11",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
