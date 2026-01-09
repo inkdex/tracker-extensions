@@ -1,7 +1,7 @@
 import {
   ButtonRow,
   Form,
-  FormSectionElement,
+  type FormSectionElement,
   InputRow,
   LabelRow,
   NavigationRow,

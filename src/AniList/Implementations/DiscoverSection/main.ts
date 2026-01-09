@@ -1,13 +1,13 @@
 import {
-  DiscoverSection,
-  DiscoverSectionItem,
-  DiscoverSectionProviding,
+  type DiscoverSection,
+  type DiscoverSectionItem,
+  type DiscoverSectionProviding,
   DiscoverSectionType,
-  PagedResults,
+  type PagedResults,
 } from "@paperback/types";
 import {
   discoverSectionsAndSearchQuery,
-  DiscoverSectionsAndSearchVariables,
+  type DiscoverSectionsAndSearchVariables,
 } from "../../GraphQL/DiscoverSectionsAndSearch";
 import { CountryCode, MediaSort } from "../../GraphQL/General";
 import { getItems } from "../helper";

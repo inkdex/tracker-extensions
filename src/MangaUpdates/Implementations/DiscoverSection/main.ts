@@ -1,12 +1,12 @@
 import {
-  DiscoverSection,
-  DiscoverSectionItem,
-  DiscoverSectionProviding,
+  type DiscoverSection,
+  type DiscoverSectionItem,
+  type DiscoverSectionProviding,
   DiscoverSectionType,
-  FeaturedCarouselItem,
-  PagedResults,
-  ProminentCarouselItem,
-  SimpleCarouselItem,
+  type FeaturedCarouselItem,
+  type PagedResults,
+  type ProminentCarouselItem,
+  type SimpleCarouselItem,
 } from "@paperback/types";
 import { makeRequest } from "../../Services/Requests";
 import { MU } from "../Shared/models/main";

@@ -1,11 +1,11 @@
 import {
-  Chapter,
-  ChapterReadActionQueueProcessingResult,
+  type Chapter,
+  type ChapterReadActionQueueProcessingResult,
   Form,
-  MangaProgress,
-  MangaProgressProviding,
-  SourceManga,
-  TrackedMangaChapterReadAction,
+  type MangaProgress,
+  type MangaProgressProviding,
+  type SourceManga,
+  type TrackedMangaChapterReadAction,
 } from "@paperback/types";
 import { makeRequest } from "../../Services/Requests";
 import { MU } from "../Shared/models/main";

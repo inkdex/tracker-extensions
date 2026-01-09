@@ -1,21 +1,21 @@
 // TODO: Expand upon this by showing more profile data and allowing mutations
 import {
   ButtonRow,
-  ButtonRowProps,
+  type ButtonRowProps,
   Form,
-  FormItemElement,
-  FormSectionElement,
+  type FormItemElement,
+  type FormSectionElement,
   LabelRow,
-  LabelRowProps,
+  type LabelRowProps,
   NavigationRow,
-  NavigationRowProps,
+  type NavigationRowProps,
   OAuthButtonRow,
-  OAuthButtonRowProps,
+  type OAuthButtonRowProps,
   Section,
   ToggleRow,
-  ToggleRowProps,
+  type ToggleRowProps,
 } from "@paperback/types";
-import { JwtPayload, Viewer, viewerQuery } from "../../GraphQL/Viewer";
+import { type JwtPayload, type Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 
 export function getSynonymsSetting(): boolean {

@@ -1,14 +1,14 @@
 import {
-  PagedResults,
-  SearchFilter,
-  SearchQuery,
-  SearchResultItem,
-  SearchResultsProviding,
-  SortingOption,
+  type PagedResults,
+  type SearchFilter,
+  type SearchQuery,
+  type SearchResultItem,
+  type SearchResultsProviding,
+  type SortingOption,
 } from "@paperback/types";
 import {
   discoverSectionsAndSearchQuery,
-  DiscoverSectionsAndSearchVariables,
+  type DiscoverSectionsAndSearchVariables,
 } from "../../GraphQL/DiscoverSectionsAndSearch";
 import {
   CountryCode,
@@ -17,7 +17,7 @@ import {
   MediaSourceMaterial,
   MediaStatus,
 } from "../../GraphQL/General";
-import { Genres, genresQuery, Tags, tagsQuery } from "../../GraphQL/SearchFilters";
+import { type Genres, genresQuery, type Tags, tagsQuery } from "../../GraphQL/SearchFilters";
 import makeRequest from "../../Services/Requests";
 import { getItems } from "../helper";
 import { MangaImplementation } from "../Manga/main";

@@ -1,5 +1,5 @@
-import { Request, Response } from "../GraphQL/General";
-import { JwtPayload } from "../GraphQL/Viewer";
+import { type Request, type Response } from "../GraphQL/General";
+import { type JwtPayload } from "../GraphQL/Viewer";
 
 const GRAPHQL_ENDPOINT = "https://graphql.anilist.co";
 

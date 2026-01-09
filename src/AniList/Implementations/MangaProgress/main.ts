@@ -1,19 +1,19 @@
 import {
-  Chapter,
-  ChapterReadActionQueueProcessingResult,
+  type Chapter,
+  type ChapterReadActionQueueProcessingResult,
   Form,
-  MangaProgress,
-  MangaProgressProviding,
-  SourceManga,
-  TrackedMangaChapterReadAction,
+  type MangaProgress,
+  type MangaProgressProviding,
+  type SourceManga,
+  type TrackedMangaChapterReadAction,
 } from "@paperback/types";
 import {
   MediaListStatus,
-  TitleProgress,
+  type TitleProgress,
   titleProgressMutationMutation,
-  TitleProgressMutationVariables,
+  type TitleProgressMutationVariables,
   titleProgressQuery,
-  TitleProgressQueryVeriables,
+  type TitleProgressQueryVeriables,
 } from "../../GraphQL/Tracking";
 import makeRequest from "../../Services/Requests";
 import { TrackingForm } from "./form";

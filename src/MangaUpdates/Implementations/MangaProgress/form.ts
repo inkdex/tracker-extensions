@@ -1,7 +1,7 @@
 import {
   ButtonRow,
   Form,
-  FormSectionElement,
+  type FormSectionElement,
   LabelRow,
   NavigationRow,
   Section,
@@ -109,7 +109,7 @@ export class MangaProgressForm extends Form {
     super();
   }
 
-  get requiresExplicitSubmission(): boolean {
+  override get requiresExplicitSubmission(): boolean {
     return true;
   }
 
