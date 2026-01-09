@@ -1,34 +1,34 @@
 import {
   ButtonRow,
-  ButtonRowProps,
+  type ButtonRowProps,
   Form,
-  FormItemElement,
-  FormSectionElement,
+  type FormItemElement,
+  type FormSectionElement,
   InputRow,
-  InputRowProps,
+  type InputRowProps,
   LabelRow,
-  LabelRowProps,
+  type LabelRowProps,
   NavigationRow,
-  NavigationRowProps,
+  type NavigationRowProps,
   Section,
   SelectRow,
-  SelectRowProps,
+  type SelectRowProps,
   StepperRow,
-  StepperRowProps,
+  type StepperRowProps,
   ToggleRow,
-  ToggleRowProps,
+  type ToggleRowProps,
 } from "@paperback/types";
 import {
   MediaListStatus,
-  TitleProgress,
-  TitleProgressDeletion,
+  type TitleProgress,
+  type TitleProgressDeletion,
   titleProgressDeletionMutation,
-  TitleProgressDeletionVariables,
-  TitleProgressMediaList,
+  type TitleProgressDeletionVariables,
+  type TitleProgressMediaList,
   titleProgressMutationMutation,
-  TitleProgressMutationVariables,
+  type TitleProgressMutationVariables,
   titleProgressQuery,
-  TitleProgressQueryVeriables,
+  type TitleProgressQueryVeriables,
 } from "../../GraphQL/Tracking";
 import makeRequest from "../../Services/Requests";
 
@@ -104,7 +104,7 @@ export class TrackingForm extends Form {
       });
   }
 
-  get requiresExplicitSubmission(): boolean {
+  override get requiresExplicitSubmission(): boolean {
     return true;
   }
 

@@ -1,7 +1,7 @@
-import { ContentRating, PagedResults } from "@paperback/types";
+import { ContentRating, type PagedResults } from "@paperback/types";
 import {
-  DiscoverSectionsAndSearch,
-  DiscoverSectionsAndSearchVariables,
+  type DiscoverSectionsAndSearch,
+  type DiscoverSectionsAndSearchVariables,
 } from "../GraphQL/DiscoverSectionsAndSearch";
 import { MediaFormat, MediaStatus } from "../GraphQL/General";
 import makeRequest from "../Services/Requests";
