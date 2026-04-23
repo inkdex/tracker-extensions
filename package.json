@@ -1,5 +1,5 @@
 {
-  "name": "tracker-extensions",
+  "name": "Tracker Extensions (0.9)",
   "private": true,
   "description": "Paperback extensions for integrating with progress tracking services. Maintained by Inkdex.",
   "type": "module",
@@ -24,6 +24,5 @@
     "oxlint": "^1.61.0",
     "oxlint-tsgolint": "^0.21.1",
     "typescript": "^6.0.3"
-  },
-  "repositoryName": "Tracker Extensions (0.9)"
+  }
 }
