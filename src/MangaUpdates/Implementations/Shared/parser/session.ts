@@ -44,7 +44,7 @@ export function getSessionInfo(): Session | undefined {
     }
 
     const payloadBase64 = sessionToken.split(".")[1] || "";
-    const payloadJson = Buffer.from(payloadBase64, "base64").toString();
+    const payloadJson = Application.base64Decode(payloadBase64) as string;
     const payload = JSON.parse(payloadJson) as SessionTokenJwtPayload;
 
     const loginTime = new Date(payload.time_created * 1000);

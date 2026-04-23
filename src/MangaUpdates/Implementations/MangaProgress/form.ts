@@ -1,7 +1,6 @@
 import {
   ButtonRow,
   Form,
-  type FormSectionElement,
   LabelRow,
   NavigationRow,
   Section,
@@ -39,7 +38,7 @@ class DeletionForm extends Form {
     this.onFormWillClose(this.result != null);
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     if (this.result != null) {
       const success = this.result.status === "success";
       return [
@@ -122,7 +121,7 @@ export class MangaProgressForm extends Form {
     await this.saveChanges();
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     if (this.loading) {
       return [
         Section("loading", [

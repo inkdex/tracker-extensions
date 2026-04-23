@@ -3,11 +3,11 @@ import {
   type ButtonRowProps,
   Form,
   type FormItemElement,
-  type FormSectionElement,
   InputRow,
   type InputRowProps,
   LabelRow,
   type LabelRowProps,
+  type ListSectionElement,
   NavigationRow,
   type NavigationRowProps,
   Section,
@@ -141,8 +141,8 @@ export class TrackingForm extends Form {
     return;
   }
 
-  override getSections(): FormSectionElement[] {
-    const sections: FormSectionElement[] = [];
+  override getSections() {
+    const sections: ListSectionElement[] = [];
 
     if (this.titleProgress == undefined && this.error == undefined) {
       return [Section("loading", [LabelRow("loading", { title: "Loading..." })])];
@@ -165,7 +165,7 @@ export class TrackingForm extends Form {
       sections.push(this.getNewMediaListEntrySection());
     }
 
-    const trackingSections: FormSectionElement[] = [
+    const trackingSections: ListSectionElement[] = [
       ...this.getProgressSections(),
       ...this.getScoreSections(),
       this.getPrivacySection(),
@@ -185,7 +185,7 @@ export class TrackingForm extends Form {
     return sections;
   }
 
-  getNewMediaListEntrySection(): FormSectionElement {
+  getNewMediaListEntrySection(): ListSectionElement {
     const newMediaListEntryLabelProps: LabelRowProps = {
       title: "New Media List Entry",
       subtitle: "Selecting Done will add this item to your media list",
@@ -196,7 +196,7 @@ export class TrackingForm extends Form {
     ]);
   }
 
-  getProgressSections(): FormSectionElement[] {
+  getProgressSections(): ListSectionElement[] {
     const titleProgress = this.titleProgress!.MediaList;
 
     const statusOptions = [];
@@ -280,7 +280,7 @@ export class TrackingForm extends Form {
     this.reloadForm();
   }
 
-  getScoreSections(): FormSectionElement[] {
+  getScoreSections(): ListSectionElement[] {
     const scoreProps: StepperRowProps = {
       title: "Score",
       subtitle: "",
@@ -302,7 +302,7 @@ export class TrackingForm extends Form {
     this.reloadForm();
   }
 
-  getPrivacySection(): FormSectionElement {
+  getPrivacySection(): ListSectionElement {
     const titleProgress = this.titleProgress!.MediaList;
 
     const privateProps: ToggleRowProps = {
@@ -333,7 +333,7 @@ export class TrackingForm extends Form {
     this.titleProgress!.MediaList.hiddenFromStatusLists = newHiddenFromStatusLists;
   }
 
-  getNotesSection(): FormSectionElement {
+  getNotesSection(): ListSectionElement {
     const notesProps: InputRowProps = {
       title: "Notes",
       value: this.titleProgress!.MediaList.notes ?? "",
@@ -354,7 +354,7 @@ export class TrackingForm extends Form {
     this.titleProgress!.MediaList.notes = newNotes;
   }
 
-  getDeleteSection(): FormSectionElement {
+  getDeleteSection(): ListSectionElement {
     const deleteNavigationProps: NavigationRowProps = {
       title: "Delete",
       form: new DeletionForm(this.titleProgress!.MediaList.id!),
@@ -374,7 +374,7 @@ class DeletionForm extends Form {
     this.mediaListId = mediaListId;
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     if (this.mediaListId == null) {
       const deletedLabelProps: LabelRowProps = {
         title: "Deleted",

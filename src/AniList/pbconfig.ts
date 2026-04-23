@@ -3,15 +3,15 @@ import { ContentRating, type ExtensionInfo, SourceIntents } from "@paperback/typ
 export default {
   name: "AniList",
   description: "Extension that integrates with anilist.co for tracking and collection management.",
-  version: "1.0.0-alpha.11",
+  version: "1.0.0-alpha.12",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
   capabilities:
     SourceIntents.SETTINGS_FORM_PROVIDING |
-    SourceIntents.DISCOVER_SECIONS_PROVIDING |
-    SourceIntents.SEARCH_RESULTS_PROVIDING |
-    SourceIntents.MANGA_PROGRESS_PROVIDING,
+    SourceIntents.DISCOVER_SECTION_PROVIDING |
+    SourceIntents.SEARCH_RESULT_PROVIDING |
+    SourceIntents.PROGRESS_PROVIDING,
   // TODO: SourceIntents.COLLECTION_MANAGEMENT
   badges: [],
   developers: [
