@@ -4,9 +4,9 @@ import {
   type ButtonRowProps,
   Form,
   type FormItemElement,
-  type FormSectionElement,
   LabelRow,
   type LabelRowProps,
+  type ListSectionElement,
   NavigationRow,
   type NavigationRowProps,
   OAuthButtonRow,
@@ -23,7 +23,7 @@ export function getSynonymsSetting(): boolean {
 }
 
 export class SettingsForm extends Form {
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     if (Application.getSecureState("session") == undefined) {
       return [Section("no-session", [this.loginButton()])];
     }
@@ -146,7 +146,7 @@ class ProfileViewForm extends Form {
       });
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     if (this.viewer == undefined && this.error == undefined) {
       return [Section("loading", [LabelRow("loading", { title: "Loading..." })])];
     }
@@ -165,7 +165,7 @@ class ProfileViewForm extends Form {
     return [this.getProfileSection(this.viewer!), this.getSessionSection()];
   }
 
-  getProfileSection(value: Viewer): FormSectionElement {
+  getProfileSection(value: Viewer): ListSectionElement {
     const creationDate = new Date(0);
     creationDate.setUTCSeconds(value.Viewer.createdAt);
 
@@ -186,10 +186,12 @@ class ProfileViewForm extends Form {
     return Section({ id: "profile-data", header: "Profile" }, rows);
   }
 
-  getSessionSection(): FormSectionElement {
+  getSessionSection(): ListSectionElement {
     const token = String(Application.getSecureState("session"));
 
-    const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString()) as JwtPayload;
+    const payload = JSON.parse(
+      Application.base64Decode(token.split(".")[1]) as string,
+    ) as JwtPayload;
 
     const rows: FormItemElement<unknown>[] = [];
     for (const [key, value] of Object.entries(payload)) {

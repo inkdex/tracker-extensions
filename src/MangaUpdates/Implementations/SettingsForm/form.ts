@@ -1,9 +1,9 @@
 import {
   ButtonRow,
   Form,
-  type FormSectionElement,
   InputRow,
   LabelRow,
+  type ListSectionElement,
   NavigationRow,
   Section,
 } from "@paperback/types";
@@ -30,7 +30,7 @@ export class LoginForm extends Form {
     this.resetFormFields();
   }
 
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     return [
       Section(
         {
@@ -100,7 +100,7 @@ export class LoginForm extends Form {
 }
 
 export class SettingsForm extends Form {
-  override getSections(): FormSectionElement[] {
+  override getSections() {
     const info = session.getSessionInfo();
     if (info == null) {
       return this.unauthenticatedView();
@@ -109,7 +109,7 @@ export class SettingsForm extends Form {
     return this.authenticatedView(info);
   }
 
-  unauthenticatedView(): FormSectionElement[] {
+  unauthenticatedView(): ListSectionElement[] {
     return [
       Section({ id: "login-section" }, [
         NavigationRow("login", {
@@ -120,7 +120,7 @@ export class SettingsForm extends Form {
     ];
   }
 
-  authenticatedView(info: session.Session): FormSectionElement[] {
+  authenticatedView(info: session.Session): ListSectionElement[] {
     return [
       Section({ id: "profile-section", header: "Profile" }, [
         LabelRow("user-name", {

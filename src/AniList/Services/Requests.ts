@@ -28,7 +28,9 @@ export default async function makeRequest<ResponseType, QueryVariablesType = nev
       throw new Error("You are not authenticated, please log in through the AniList settings");
     }
 
-    const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString()) as JwtPayload;
+    const payload = JSON.parse(
+      Application.base64Decode(token.split(".")[1]) as string,
+    ) as JwtPayload;
 
     if (Number(payload.exp) < new Date().valueOf() / 1000) {
       Application.setSecureState(null, "session");
