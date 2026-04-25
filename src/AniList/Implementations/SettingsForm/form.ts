@@ -15,6 +15,7 @@ import {
   ToggleRow,
   type ToggleRowProps,
 } from "@paperback/types";
+
 import { type JwtPayload, type Viewer, viewerQuery } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
 

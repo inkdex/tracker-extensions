@@ -1,4 +1,5 @@
 import { type MangaProviding, type SourceManga } from "@paperback/types";
+
 import { makeRequest } from "../../Services/Requests";
 import { manga } from "../Shared/parser/main";
 

@@ -5,6 +5,7 @@ import {
   DiscoverSectionType,
   type PagedResults,
 } from "@paperback/types";
+
 import {
   discoverSectionsAndSearchQuery,
   type DiscoverSectionsAndSearchVariables,

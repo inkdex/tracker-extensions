@@ -1,4 +1,5 @@
 import { ContentRating, type MangaInfo } from "@paperback/types";
+
 import type { MU } from "../models/main";
 
 const ADULT_GENRES = ["Adult", "Hentai", "Smut"];
