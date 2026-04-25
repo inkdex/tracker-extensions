@@ -1,4 +1,5 @@
 import { ContentRating, type PagedResults } from "@paperback/types";
+
 import {
   type DiscoverSectionsAndSearch,
   type DiscoverSectionsAndSearchVariables,

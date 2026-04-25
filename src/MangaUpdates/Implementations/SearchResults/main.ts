@@ -6,6 +6,7 @@ import {
   type SearchResultsProviding,
   type SortingOption,
 } from "@paperback/types";
+
 import { makeRequest } from "../../Services/Requests";
 import { MangaImplementation } from "../Manga/main";
 import { MU } from "../Shared/models/main";

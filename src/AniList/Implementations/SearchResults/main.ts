@@ -6,6 +6,7 @@ import {
   type SearchResultsProviding,
   type SortingOption,
 } from "@paperback/types";
+
 import {
   discoverSectionsAndSearchQuery,
   type DiscoverSectionsAndSearchVariables,

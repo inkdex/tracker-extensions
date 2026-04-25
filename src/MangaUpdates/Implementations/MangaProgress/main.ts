@@ -7,6 +7,7 @@ import {
   type SourceManga,
   type TrackedMangaChapterReadAction,
 } from "@paperback/types";
+
 import { makeRequest } from "../../Services/Requests";
 import { MU } from "../Shared/models/main";
 import { session } from "../Shared/parser/main";

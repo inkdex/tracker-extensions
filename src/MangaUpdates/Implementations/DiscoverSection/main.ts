@@ -8,6 +8,7 @@ import {
   type ProminentCarouselItem,
   type SimpleCarouselItem,
 } from "@paperback/types";
+
 import { makeRequest } from "../../Services/Requests";
 import { MU } from "../Shared/models/main";
 import { manga } from "../Shared/parser/main";

@@ -1,4 +1,5 @@
 import type { SearchResultItem, SortingOption } from "@paperback/types";
+
 import type { MU } from "../Shared/models/main";
 import { manga } from "../Shared/parser/main";
 

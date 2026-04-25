@@ -1,4 +1,5 @@
 import { BasicRateLimiter, type Extension, type MangaProviding } from "@paperback/types";
+
 import { DiscoverSectionImplementation } from "./Implementations/DiscoverSection/main";
 import { applyMixins } from "./Implementations/helper";
 import { MangaImplementation } from "./Implementations/Manga/main";
