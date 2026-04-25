@@ -8,12 +8,13 @@ export default {
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
-  capabilities:
-    SourceIntents.SETTINGS_FORM_PROVIDING |
-    SourceIntents.DISCOVER_SECTION_PROVIDING |
-    SourceIntents.SEARCH_RESULT_PROVIDING |
+  capabilities: [
+    // TODO: SourceIntents.COLLECTION_MANAGEMENT
+    SourceIntents.DISCOVER_SECTION_PROVIDING,
     SourceIntents.PROGRESS_PROVIDING,
-  // TODO: SourceIntents.COLLECTION_MANAGEMENT
+    SourceIntents.SETTINGS_FORM_PROVIDING,
+    SourceIntents.SEARCH_RESULT_PROVIDING,
+  ],
   badges: [],
   developers: [
     {
