@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 import { ContentRating, type MangaInfo } from "@paperback/types";
 
 import type { MU } from "../models/main";

@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 import type * as MU from "../Implementations/Shared/models/main";
 import { session } from "../Implementations/Shared/parser/main";
 
