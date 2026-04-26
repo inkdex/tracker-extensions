@@ -221,10 +221,7 @@ export type Endpoint = Extract<keyof MangaUpdatesApi, string>;
 export type Verb<E extends Endpoint> = Extract<keyof MangaUpdatesApi[E], string>;
 
 type EndpointVerb<E extends Endpoint, V extends Verb<E>> = MangaUpdatesApi[E][V] extends {
-  // These `any`s are important!
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   request: { params: any; query: any; body: any };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
 }
   ? MangaUpdatesApi[E][V]
