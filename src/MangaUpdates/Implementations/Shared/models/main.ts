@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 /**
  * MangaUpdates API types are auto-generated from the MangaUpdates OpenAPI
  * specification.

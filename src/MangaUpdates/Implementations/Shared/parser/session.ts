@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 const logPrefix = "[mu-session]";
 
 const STATE_MU_SESSION = "mu_sessiontoken";

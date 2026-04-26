@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 import { BasicRateLimiter, type Extension, type MangaProviding } from "@paperback/types";
 
 import { DiscoverSectionImplementation } from "./Implementations/DiscoverSection/main";

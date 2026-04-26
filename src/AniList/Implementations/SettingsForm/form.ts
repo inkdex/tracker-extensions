@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Copyright © 2026 Inkdex */
+
 // TODO: Expand upon this by showing more profile data and allowing mutations
 import {
   ButtonRow,
