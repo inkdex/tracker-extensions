@@ -108,9 +108,7 @@ export class TrackingForm extends Form {
       });
   }
 
-  override get requiresExplicitSubmission(): boolean {
-    return true;
-  }
+  override requiresExplicitSubmission = true;
 
   override async formDidSubmit(): Promise<void> {
     if (this.titleProgress == undefined) {
