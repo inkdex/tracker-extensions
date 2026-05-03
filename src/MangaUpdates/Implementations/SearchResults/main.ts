@@ -2,8 +2,8 @@
 /* Copyright © 2026 Inkdex */
 
 import {
+  type AdvancedSearchForm,
   type PagedResults,
-  type SearchFilter,
   type SearchQuery,
   type SearchResultItem,
   type SearchResultsProviding,
@@ -13,169 +13,18 @@ import {
 import { makeRequest } from "../../Services/Requests";
 import { MangaImplementation } from "../Manga/main";
 import { MU } from "../Shared/models/main";
+import { MangaUpdatesAdvancedSearchForm, type SearchMetadata } from "./form";
 import * as search from "./parser";
-
-const TYPE_LIST = [
-  "Artbook",
-  "Doujinshi",
-  "Drama CD",
-  "Filipino",
-  "French",
-  "German",
-  "Indonesian",
-  "Malaysian",
-  "Manga",
-  "Manhua",
-  "Manhwa",
-  "Nordic",
-  "Novel",
-  "OEL",
-  "Spanish",
-  "Thai",
-  "Vietnamese",
-].map((t) => ({ id: t.replaceAll(" ", "_"), value: t }));
-
-const STATUS_LIST = [
-  { id: "scanlated", value: "Only show completely scanlated manga" },
-  {
-    id: "completed",
-    value: "Only show completed (including oneshots) manga",
-  },
-  { id: "oneshots", value: "Only show one shots" },
-  { id: "no_oneshots", value: "Exclude one shots" },
-  { id: "some_releases", value: "Only show manga with at least one release" },
-  { id: "no_releases", value: "Only show manga with no releases" },
-] satisfies Array<{
-  id: NonNullable<MU.MUSeriesSearchRequestV1["filters"]>[number];
-  value: string;
-}>;
-
-enum Filter {
-  demographic = "demographic",
-  genre = "genre",
-  category = "category",
-  licensed = "licensed",
-  type = "type",
-  status = "status",
-  list = "list",
-}
-
-const getMultiSelection = (
-  value: string | Record<string, "included" | "excluded">,
-  selectionType: "included" | "excluded",
-) => {
-  if (typeof value === "string") {
-    return selectionType === "included" && value ? [value] : [];
-  }
-
-  return Object.entries(value)
-    .filter(([id, selection]) => {
-      void id;
-      return selection === selectionType;
-    })
-    .map(([id]) => id);
-};
-
-const getBooleanSelection = (
-  value: string | Record<string, "included" | "excluded">,
-  optionName: string,
-) => {
-  if (typeof value === "string" || value[optionName] == null) {
-    return undefined;
-  }
-
-  return value[optionName] === "included";
-};
 
 export class SearchResultsImplementation
   extends MangaImplementation
   implements SearchResultsProviding
 {
-  async getSearchFilters(): Promise<SearchFilter[]> {
-    const [genres, lists] = await Promise.all([
-      makeRequest("/v1/genres", "GET", {}),
-      makeRequest("/v1/lists", "GET", {}),
-    ]);
-
-    return [
-      {
-        type: "multiselect",
-        id: Filter.demographic,
-        title: "Demographic",
-        options: genres
-          .filter((g) => g.demographic)
-          .map((g) => ({
-            id: g.genre!.replaceAll(" ", "_"),
-            value: g.genre!,
-          })),
-        value: {},
-        allowExclusion: true,
-        allowEmptySelection: true,
-        maximum: undefined,
-      },
-      {
-        type: "multiselect",
-        id: Filter.genre,
-        title: "Genre",
-        options: genres
-          .filter((g) => !g.demographic)
-          .map((g) => ({
-            id: g.genre!.replaceAll(" ", "_"),
-            value: g.genre!,
-          })),
-        value: {},
-        allowExclusion: true,
-        allowEmptySelection: true,
-        maximum: undefined,
-      },
-      {
-        type: "input",
-        id: Filter.category,
-        title: "Categories/Tags",
-        placeholder: 'List the categories you want to include, separated by a ","',
-        value: "",
-      },
-      {
-        type: "multiselect",
-        id: Filter.licensed,
-        title: "Licensed",
-        options: [{ id: "licensed", value: "Licensed" }],
-        value: {},
-        allowExclusion: true,
-        allowEmptySelection: true,
-        maximum: undefined,
-      },
-      {
-        type: "multiselect",
-        id: Filter.type,
-        title: "Type",
-        options: TYPE_LIST,
-        value: {},
-        allowExclusion: false,
-        allowEmptySelection: true,
-        maximum: undefined,
-      },
-      {
-        type: "dropdown",
-        id: Filter.status,
-        title: "Status",
-        options: STATUS_LIST,
-        value: "",
-      },
-      {
-        type: "dropdown",
-        id: Filter.list,
-        title: "List",
-        options: lists.map((l) => ({
-          id: String(l.list_id!),
-          value: `Only show manga on my ${l.title} list`,
-        })),
-        value: "",
-      },
-    ];
+  async getAdvancedSearchForm(query: SearchQuery<SearchMetadata>): Promise<AdvancedSearchForm> {
+    return new MangaUpdatesAdvancedSearchForm(query);
   }
 
-  async getSortingOptions(query: SearchQuery): Promise<SortingOption[]> {
+  async getSortingOptions(query: SearchQuery<SearchMetadata>): Promise<SortingOption[]> {
     void query;
     return [
       { id: search.SearchOrderBy.none, label: "Default" },
@@ -186,9 +35,9 @@ export class SearchResultsImplementation
   }
 
   async getSearchResults(
-    query: SearchQuery,
-    metadata?: number,
-    sortingOption?: SortingOption,
+    query: SearchQuery<SearchMetadata>,
+    metadata: number | undefined,
+    sortingOption: SortingOption | undefined,
   ): Promise<PagedResults<SearchResultItem>> {
     const logPrefix = "[getSearchResults]";
     console.log(`${logPrefix} starts`);
@@ -207,48 +56,46 @@ export class SearchResultsImplementation
         return { items: [], metadata: { nextPage: -1 } };
       }
 
-      for (const filter of query.filters) {
-        switch (filter.id as Filter) {
-          case Filter.demographic:
-          case Filter.genre:
-            body.genre = [
-              ...(body.genre ?? []),
-              ...getMultiSelection(filter.value, "included").map((g) => g.replaceAll("_", " ")),
-            ];
-            body.exclude_genre = [
-              ...(body.exclude_genre ?? []),
-              ...getMultiSelection(filter.value, "excluded").map((g) => g.replaceAll("_", " ")),
-            ];
-            break;
-          case Filter.category:
-            break;
-          case Filter.licensed: {
-            const licensed = getBooleanSelection(filter.value, "licensed");
-            if (licensed != null) {
-              body.licensed = licensed ? "yes" : "no";
-            }
-            break;
-          }
-          case Filter.type:
-            body.filter_types = getMultiSelection(filter.value, "included").map((t) =>
-              t.replaceAll("_", " "),
-            );
-            break;
-          case Filter.status:
-            body.filters = getMultiSelection(
-              filter.value,
-              "included",
-            ) as MU.MUSeriesSearchRequestV1["filters"];
-            break;
-          case Filter.list:
-            if (typeof filter.value === "string" && filter.value) {
-              body.list = filter.value;
-            }
-            break;
-          default:
-            console.log(`${logPrefix} unknown filter: ${filter.id}`);
-            break;
+      const meta = query.metadata ?? {};
+
+      const includedGenres: string[] = [];
+      const excludedGenres: string[] = [];
+      for (const source of [meta.demographics, meta.genres]) {
+        if (!source) continue;
+        for (const [id, state] of Object.entries(source)) {
+          const value = id.replaceAll("_", " ");
+          if (state === "included") includedGenres.push(value);
+          else if (state === "excluded") excludedGenres.push(value);
         }
+      }
+      if (includedGenres.length > 0) body.genre = includedGenres;
+      if (excludedGenres.length > 0) body.exclude_genre = excludedGenres;
+
+      if (meta.categories) {
+        const categories = meta.categories
+          .split(",")
+          .map((c) => c.trim())
+          .filter((c) => c.length > 0);
+        if (categories.length > 0) body.category = categories;
+      }
+
+      if (meta.licensed === "included") body.licensed = "yes";
+      else if (meta.licensed === "excluded") body.licensed = "no";
+
+      if (meta.types) {
+        const includedTypes: string[] = [];
+        for (const [id, state] of Object.entries(meta.types)) {
+          if (state === "included") includedTypes.push(id.replaceAll("_", " "));
+        }
+        if (includedTypes.length > 0) body.filter_types = includedTypes;
+      }
+
+      if (meta.status) {
+        body.filters = [meta.status];
+      }
+
+      if (meta.list) {
+        body.list = meta.list;
       }
 
       console.log(`${logPrefix} searching: ${JSON.stringify(body)}`);

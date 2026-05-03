@@ -112,9 +112,7 @@ export class MangaProgressForm extends Form {
     super();
   }
 
-  override get requiresExplicitSubmission(): boolean {
-    return true;
-  }
+  override requiresExplicitSubmission = true;
 
   override formWillAppear(): void {
     session.assertMustBeAuthenticated();
