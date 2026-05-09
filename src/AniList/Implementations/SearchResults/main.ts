@@ -112,7 +112,7 @@ export class SearchResultsImplementation
     }
 
     if (meta.countryOfOrigin) {
-      variables.countryOfOrigin = meta.countryOfOrigin;
+      variables.countryOfOrigin = meta.countryOfOrigin[0];
     }
 
     if (meta.sourceMaterials && meta.sourceMaterials.length > 0) {

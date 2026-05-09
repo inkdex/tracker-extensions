@@ -24,7 +24,7 @@ export type SearchMetadata = {
   genres?: { [id: string]: "included" | "excluded" };
   formats?: { [id: string]: "included" | "excluded" };
   publishingStatuses?: { [id: string]: "included" | "excluded" };
-  countryOfOrigin?: string;
+  countryOfOrigin?: string[];
   sourceMaterials?: string[];
   startYears?: string;
   chapterCounts?: string;
@@ -45,7 +45,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
   private genres: Record<string, "included" | "excluded">;
   private formats: Record<string, "included" | "excluded">;
   private statuses: Record<string, "included" | "excluded">;
-  private countryOfOrigin: string;
+  private countryOfOrigin: string[];
   private sourceMaterials: string[];
   private startYears: string;
   private chapterCounts: string;
@@ -82,7 +82,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
     this.genres = { ...meta.genres };
     this.formats = { ...meta.formats };
     this.statuses = { ...meta.publishingStatuses };
-    this.countryOfOrigin = meta.countryOfOrigin ?? "";
+    this.countryOfOrigin = meta.countryOfOrigin ?? [];
     this.sourceMaterials = meta.sourceMaterials ?? [];
     this.startYears = meta.startYears ?? "";
     this.chapterCounts = meta.chapterCounts ?? "";
@@ -176,7 +176,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
         id: "country-of-origin",
         header: "Country of Origin",
         layout: "list",
-        value: this.countryOfOrigin ? [this.countryOfOrigin] : [],
+        value: this.countryOfOrigin,
         items: Object.values(CountryCode).map((x) => ({ id: x.id, title: x.label })),
         minItemCount: 0,
         maxItemCount: 1,
@@ -303,7 +303,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
     if (Object.keys(this.formats).length > 0) result.formats = this.formats;
     if (Object.keys(this.statuses).length > 0) result.publishingStatuses = this.statuses;
 
-    if (this.countryOfOrigin) result.countryOfOrigin = this.countryOfOrigin;
+    if (this.countryOfOrigin.length === 1) result.countryOfOrigin = this.countryOfOrigin;
     if (this.sourceMaterials.length > 0) result.sourceMaterials = this.sourceMaterials;
     if (this.startYears) result.startYears = this.startYears;
     if (this.chapterCounts) result.chapterCounts = this.chapterCounts;
