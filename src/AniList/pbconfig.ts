@@ -6,16 +6,16 @@ import { ContentRating, type ExtensionInfo, SourceIntents } from "@paperback/typ
 export default {
   name: "AniList",
   description: "Extension that integrates with anilist.co for tracking and collection management.",
-  version: "1.0.0-alpha.14",
+  version: "1.0.0-alpha.15",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
   capabilities: [
-    // TODO: SourceIntents.COLLECTION_MANAGEMENT
     SourceIntents.DISCOVER_SECTION_PROVIDING,
     SourceIntents.PROGRESS_PROVIDING,
     SourceIntents.SETTINGS_FORM_PROVIDING,
     SourceIntents.SEARCH_RESULT_PROVIDING,
+    SourceIntents.MANAGED_COLLECTION_PROVIDING,
   ],
   badges: [],
   developers: [

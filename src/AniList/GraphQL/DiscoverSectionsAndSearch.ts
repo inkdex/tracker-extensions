@@ -65,13 +65,13 @@ query Query(
       id
       isAdult
       status
+      synonyms
       title {
         english
         native
         romaji
       }
       volumes
-      synonyms
     }
   }
 }
@@ -128,13 +128,13 @@ type DiscoverSectionsAndSearchMedia = {
   synonyms: string[];
 };
 
-type DiscoverSectionsAndSearchCoverImage = {
+export type DiscoverSectionsAndSearchCoverImage = {
   extraLarge: string;
   large: string;
   medium: string;
 };
 
-type DiscoverSectionsAndSearchTitle = {
+export type DiscoverSectionsAndSearchTitle = {
   english: string | null;
   native: string | null;
   romaji: string | null;

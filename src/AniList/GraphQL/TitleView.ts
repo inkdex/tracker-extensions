@@ -11,9 +11,11 @@ query Query($id: Int) {
       large
       medium
     }
+    chapters
     description
     format
     genres
+    id
     isAdult
     staff {
       edges {
@@ -26,6 +28,7 @@ query Query($id: Int) {
       }
     }
     status
+    synonyms
     tags {
       id
       name
@@ -35,7 +38,7 @@ query Query($id: Int) {
       native
       romaji
     }
-    synonyms
+    volumes
   }
 }
 `;
@@ -48,19 +51,22 @@ export type TitleView = {
   Media: TitleViewMedia;
 };
 
-type TitleViewMedia = {
+export type TitleViewMedia = {
   averageScore: number | null;
   bannerImage: string | null;
+  chapters: number | null;
   coverImage: TitleViewCoverImage;
   description: string | null;
   format: string;
   genres: string[];
+  id: number;
   isAdult: boolean;
   staff: TitleViewStaff;
   status: string;
+  synonyms: string[];
   tags: TitleViewTag[];
   title: TitleViewTitle;
-  synonyms: string[];
+  volumes: number | null;
 };
 
 type TitleViewCoverImage = {
@@ -69,29 +75,29 @@ type TitleViewCoverImage = {
   medium: string;
 };
 
-type TitleViewStaff = {
+export type TitleViewStaff = {
   edges: TitleViewStaffEdge[];
 };
 
-type TitleViewStaffEdge = {
+export type TitleViewStaffEdge = {
   node: TitleViewStaffNode;
   role: string;
 };
 
-type TitleViewStaffNode = {
+export type TitleViewStaffNode = {
   name: TitleViewStaffName;
 };
 
-type TitleViewStaffName = {
+export type TitleViewStaffName = {
   full: string;
 };
 
-type TitleViewTag = {
+export type TitleViewTag = {
   id: string;
   name: string;
 };
 
-type TitleViewTitle = {
+export type TitleViewTitle = {
   english: string | null;
   romaji: string | null;
   native: string | null;
