@@ -15,6 +15,7 @@ import {
   OAuthButtonRow,
   type OAuthButtonRowProps,
   Section,
+  SelectRow,
   ToggleRow,
   type ToggleRowProps,
 } from "@paperback/types";
@@ -94,26 +95,6 @@ export class SettingsForm extends Form {
     const viewer = await makeRequest<Viewer>(viewerQuery, true);
 
     Application.setState(viewer.Viewer.id, "viewer-id");
-    Application.setState(
-      JSON.stringify(viewer.Viewer.mediaListOptions.mangaList.advancedScoring),
-      "viewer-advanced-scoring",
-    );
-    Application.setState(
-      JSON.stringify(viewer.Viewer.mediaListOptions.mangaList.sectionOrder),
-      "viewer-list-order",
-    );
-    Application.setState(
-      JSON.stringify(viewer.Viewer.mediaListOptions.mangaList.customLists),
-      "viewer-custom-lists",
-    );
-    Application.setState(
-      String(viewer.Viewer.mediaListOptions.mangaList.splitCompletedSectionByFormat),
-      "viewer-split-completed-list-by-format",
-    );
-    Application.setState(
-      String(viewer.Viewer.mediaListOptions.mangaList.advancedScoringEnabled),
-      "viewer-advanced-scoring-enabled",
-    );
 
     this.reloadForm();
   }
@@ -122,11 +103,6 @@ export class SettingsForm extends Form {
     Application.setSecureState(null, "session");
 
     Application.setState(null, "viewer-id");
-    Application.setState(null, "viewer-advanced-scoring");
-    Application.setState(null, "viewer-list-order");
-    Application.setState(null, "viewer-custom-lists");
-    Application.setState(null, "viewer-split-completed-list-by-format");
-    Application.setState(null, "viewer-advanced-scoring-enabled");
 
     this.reloadForm();
   }
@@ -166,28 +142,82 @@ class ProfileViewForm extends Form {
       ];
     }
 
-    return [this.getProfileSection(this.viewer!), this.getSessionSection()];
+    return [...this.getProfileSection(this.viewer!), this.getSessionSection()];
   }
 
-  getProfileSection(value: Viewer): ListSectionElement {
-    const creationDate = new Date(0);
-    creationDate.setUTCSeconds(value.Viewer.createdAt);
-
-    const rows: FormItemElement<unknown>[] = [
-      // An image form element is needed to be able to display this
-      //LabelRow("avatar", { title: "Avatar", value: value.Viewer.avatar.large }),
-      LabelRow("username-id", {
-        title: "Username",
-        value: value.Viewer.name,
-        subtitle: "Id: " + value.Viewer.id.toString(),
-      }),
-      LabelRow("creation-date", {
-        title: "Creation Date",
-        value: creationDate.toLocaleString(),
-      }),
+  getProfileSection(value: Viewer): ListSectionElement[] {
+    return [
+      Section({ id: "profile-data", header: "Profile" }, [
+        LabelRow("username-id", {
+          title: "Username",
+          value: value.Viewer.name,
+          subtitle: "Id: " + value.Viewer.id.toString(),
+        }),
+        LabelRow("creation-date", {
+          title: "Creation Date",
+          value: new Date(value.Viewer.createdAt * 1000).toLocaleString(),
+        }),
+      ]),
+      Section(
+        {
+          id: "manga-list-settings",
+          header: "Manga List Settings",
+          footer:
+            "At a later time these will become editable, please use the website (aniList.co) for now.",
+        },
+        [
+          LabelRow("advanced-scoring-enabled", {
+            title: "Advanced Scoring Enabled",
+            value: value.Viewer.mediaListOptions.mangaList.advancedScoringEnabled
+              ? "True"
+              : "False",
+          }),
+          SelectRow("advanced-scoring-fields", {
+            title: "Advanced Scoring Fields",
+            layout: "list",
+            items: value.Viewer.mediaListOptions.mangaList.advancedScoring.map((v) => {
+              return { id: v.toLowerCase().replaceAll(" ", "-"), title: v };
+            }),
+            value: [],
+            minItemCount: 0,
+            maxItemCount: 1,
+            onValueChange: Application.Selector(this as ProfileViewForm, "noOp"),
+          }),
+          SelectRow("custom-lists", {
+            title: "Custom Lists",
+            layout: "list",
+            items: value.Viewer.mediaListOptions.mangaList.customLists.map((v) => {
+              return { id: v.toLowerCase().replaceAll(" ", "-"), title: v };
+            }),
+            value: [],
+            minItemCount: 0,
+            maxItemCount: 1,
+            onValueChange: Application.Selector(this as ProfileViewForm, "noOp"),
+          }),
+          LabelRow("split-completed-list-by-format", {
+            title: "Split Completed List by Format",
+            value: value.Viewer.mediaListOptions.mangaList.splitCompletedSectionByFormat
+              ? "True"
+              : "False",
+          }),
+          SelectRow("list-order", {
+            title: "List Order",
+            layout: "list",
+            items: value.Viewer.mediaListOptions.mangaList.sectionOrder.map((v) => {
+              return { id: v.toLowerCase().replaceAll(" ", "-"), title: v };
+            }),
+            value: [],
+            minItemCount: 0,
+            maxItemCount: 1,
+            onValueChange: Application.Selector(this as ProfileViewForm, "noOp"),
+          }),
+        ],
+      ),
     ];
+  }
 
-    return Section({ id: "profile-data", header: "Profile" }, rows);
+  async noOp(_value: string[]): Promise<void> {
+    return;
   }
 
   getSessionSection(): ListSectionElement {

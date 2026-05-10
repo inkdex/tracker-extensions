@@ -5,6 +5,7 @@ import { BasicRateLimiter, type Extension, type MangaProviding } from "@paperbac
 
 import { DiscoverSectionImplementation } from "./Implementations/DiscoverSection/main";
 import { applyMixins } from "./Implementations/helper";
+import { ManagedCollectionImplementation } from "./Implementations/ManagedCollection/main";
 import { MangaImplementation } from "./Implementations/Manga/main";
 import { MangaProgressImplementation } from "./Implementations/MangaProgress/main";
 import { SearchResultsImplementation } from "./Implementations/SearchResults/main";
@@ -17,7 +18,8 @@ export interface AniListImplementation
     SearchResultsImplementation,
     DiscoverSectionImplementation,
     MangaImplementation,
-    MangaProgressImplementation {}
+    MangaProgressImplementation,
+    ManagedCollectionImplementation {}
 
 export class AniListExtension implements Omit<Extension, keyof MangaProviding> {
   mainRateLimiter = new BasicRateLimiter("main", {
@@ -39,6 +41,7 @@ applyMixins(AniListExtension, [
   DiscoverSectionImplementation,
   MangaImplementation,
   MangaProgressImplementation,
+  ManagedCollectionImplementation,
 ]);
 
 export const AniList = new AniListExtension();
