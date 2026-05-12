@@ -4,17 +4,17 @@
   "description": "Paperback extensions for integrating with progress tracking services. Maintained by Inkdex.",
   "type": "module",
   "scripts": {
+    "tsc": "tsc",
     "lint": "oxlint --type-aware --fix",
     "lint:check": "oxlint --type-aware --deny-warnings",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "tsc": "tsc --project tsconfig.json --noEmit",
+    "conformance": "npm run tsc && npm run lint:check && npm run format:check",
     "bundle": "paperback-cli bundle",
     "test": "paperback-cli test --noConsole --output ./bundles/tests.json",
     "serve": "paperback-cli serve",
     "logcat": "paperback-cli logcat",
     "dev": "paperback-cli serve --watch",
-    "conformance": "npm run tsc && npm run lint:check && npm run format:check",
     "prepare": "husky"
   },
   "devDependencies": {
