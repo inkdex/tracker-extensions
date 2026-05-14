@@ -77,9 +77,12 @@ export class LoginForm extends Form {
     }
 
     try {
-      const result = await makeRequest("/v1/account/login", "PUT", {
-        body: this.loginForm,
-      });
+      const result = await makeRequest(
+        "/v1/account/login",
+        "PUT",
+        { body: this.loginForm },
+        { allowAnonymous: true },
+      );
       const sessionToken = result.context?.session_token;
       if (!sessionToken) {
         console.log(`${logPrefix} no session token on response: ${JSON.stringify(result)}`);

@@ -124,15 +124,15 @@ export class MangaUpdatesAdvancedSearchForm extends AdvancedSearchForm {
     }
 
     const [genres, lists] = await Promise.all([
-      makeRequest("/v1/genres", "GET", {}),
-      makeRequest("/v1/lists", "GET", {}),
+      makeRequest("/v1/genres", "GET", {}, { allowAnonymous: true }),
+      makeRequest("/v1/lists", "GET", {}, { failOnError: false }),
     ]);
 
     Application.setState(JSON.stringify(genres), STATE_GENRES);
     Application.setState(JSON.stringify(lists), STATE_LISTS);
     Application.setState(String(new Date().valueOf() / 1000), STATE_QUERY_DATE);
 
-    return { genres, lists };
+    return { genres, lists: lists ?? [] };
   }
 
   override getSections() {

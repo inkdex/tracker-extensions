@@ -47,11 +47,8 @@ export class MangaProgressImplementation implements MangaProgressProviding {
     const progressInfo = await makeRequest(
       "/v1/lists/series/{seriesId}",
       "GET",
-      {
-        params: { seriesId: sourceManga.mangaId },
-        query: {},
-      },
-      false,
+      { params: { seriesId: sourceManga.mangaId }, query: {} },
+      { failOnError: false },
     );
     if (progressInfo == null) {
       return undefined;
@@ -170,7 +167,7 @@ export class MangaProgressImplementation implements MangaProgressProviding {
         "/v1/lists/series/{seriesId}",
         "GET",
         { params: { seriesId }, query: {} },
-        false,
+        { failOnError: false },
       );
 
       const listChapter = listInfo?.status?.chapter ?? 0;

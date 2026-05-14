@@ -59,15 +59,19 @@ export async function makeRequest<
   V extends MU.Verb<E>,
   F extends boolean = true,
   R = F extends true ? MU.Response<E, V> : MU.Response<E, V> | undefined,
->(endpoint: E, verb: V, request: MU.Request<E, V>, failOnErrorStatus?: F): Promise<R> {
+>(
+  endpoint: E,
+  verb: V,
+  request: MU.Request<E, V>,
+  {
+    allowAnonymous = false,
+    failOnError = true as F,
+  }: { failOnError?: F; allowAnonymous?: boolean } = {},
+): Promise<R> {
   const logPrefix = `[request] ${verb} ${endpoint}`;
-  const isLogin = endpoint === "/v1/account/login";
-  const failOnError = (failOnErrorStatus ?? true) as F;
   const baseRequest: Partial<MU.BaseRequest> = request;
 
-  console.log(
-    `${logPrefix} starts (failOnErrorStatus=${failOnError}): ${loggableRequest(baseRequest)}`,
-  );
+  console.log(`${logPrefix} starts (failOnError=${failOnError}): ${loggableRequest(baseRequest)}`);
 
   const path = Object.entries(baseRequest.params || {})
     .filter((entry) => entry[1] != undefined)
@@ -91,9 +95,16 @@ export async function makeRequest<
   if (baseRequest.body) {
     headers["content-type"] = "application/json";
   }
-  if (!isLogin) {
-    session.assertMustBeAuthenticated();
-    const sessionToken = session.getSessionToken()!;
+
+  const sessionToken = session.getSessionToken();
+  if (!allowAnonymous) {
+    if (failOnError) {
+      session.assertMustBeAuthenticated();
+    } else if (!sessionToken) {
+      return undefined as R;
+    }
+  }
+  if (sessionToken) {
     headers.authorization = `Bearer ${sessionToken}`;
   }
 
