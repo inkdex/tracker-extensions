@@ -102,7 +102,12 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
           break;
       }
 
-      const page = await makeRequest("/v1/series/search", "POST", { body }, false);
+      const page = await makeRequest(
+        "/v1/series/search",
+        "POST",
+        { body },
+        { allowAnonymous: true, failOnError: false },
+      );
       const results = (page?.results ?? []).map((r) => r.record);
 
       const items = results

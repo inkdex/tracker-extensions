@@ -99,9 +99,12 @@ export class SearchResultsImplementation
       }
 
       console.log(`${logPrefix} searching: ${JSON.stringify(body)}`);
-      const response = await makeRequest("/v1/series/search", "POST", {
-        body,
-      });
+      const response = await makeRequest(
+        "/v1/series/search",
+        "POST",
+        { body },
+        { allowAnonymous: true },
+      );
 
       const results = search.parseSearchResults(response.results || []);
       const hasNextPage = body.page * body.perpage < (response.total_hits ?? 0);

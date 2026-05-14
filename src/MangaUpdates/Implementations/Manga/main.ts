@@ -11,10 +11,12 @@ export class MangaImplementation implements MangaProviding {
     const logPrefix = "[getMangaDetails]";
     console.log(`${logPrefix} start: ${mangaId}`);
 
-    const series = await makeRequest("/v1/series/{id}", "GET", {
-      params: { id: mangaId },
-      query: {},
-    });
+    const series = await makeRequest(
+      "/v1/series/{id}",
+      "GET",
+      { params: { id: mangaId }, query: {} },
+      { allowAnonymous: true },
+    );
 
     const result = {
       mangaId,

@@ -82,7 +82,7 @@ class DeletionForm extends Form {
         "/v1/lists/series/delete",
         "POST",
         { body: [parseInt(this.mangaId)] },
-        false,
+        { failOnError: false },
       );
       if (result == null) {
         throw new Error("Failed to delete.");
@@ -261,18 +261,25 @@ export class MangaProgressForm extends Form {
       console.log(`${logPrefix} start: ${this.mangaId}`);
 
       const [mangaInfo, mangaLists, progressInfo, ratingInfo] = await Promise.all([
-        makeRequest("/v1/series/{id}", "GET", {
-          params: { id: this.mangaId },
-          query: {},
-        }),
+        makeRequest(
+          "/v1/series/{id}",
+          "GET",
+          { params: { id: this.mangaId }, query: {} },
+          { allowAnonymous: true },
+        ),
         makeRequest("/v1/lists", "GET", {}),
         makeRequest(
           "/v1/lists/series/{seriesId}",
           "GET",
           { params: { seriesId: this.mangaId }, query: {} },
-          false,
+          { failOnError: false },
         ),
-        makeRequest("/v1/series/{id}/rating", "GET", { params: { id: this.mangaId } }, false),
+        makeRequest(
+          "/v1/series/{id}/rating",
+          "GET",
+          { params: { id: this.mangaId } },
+          { failOnError: false },
+        ),
       ]);
       console.log(`${logPrefix} data fetch complete: ${this.mangaId}`);
 

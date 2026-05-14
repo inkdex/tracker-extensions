@@ -7,7 +7,7 @@ export default {
   name: "MangaUpdates",
   description:
     "Extension that integrates with mangaupdates.com for tracking and collection management.",
-  version: "1.0.0-alpha.6",
+  version: "1.0.0-alpha.7",
   icon: "icon.png",
   language: "en",
   contentRating: ContentRating.EVERYONE,
