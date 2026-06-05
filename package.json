@@ -18,13 +18,13 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@paperback/toolchain": "^1.0.0-alpha.87",
-    "@paperback/types": "^1.0.0-alpha.87",
+    "@paperback/toolchain": "^1.0.0-alpha.89",
+    "@paperback/types": "^1.0.0-alpha.89",
     "@types/chai": "^5.2.3",
     "chai": "^6.2.2",
     "husky": "^9.1.7",
-    "oxfmt": "^0.51.0",
-    "oxlint": "^1.66.0",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
     "oxlint-tsgolint": "^0.23.0",
     "typescript": "^6.0.3"
   }
