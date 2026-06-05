@@ -29,9 +29,7 @@ export type SearchMetadata = {
   startYears?: string;
   chapterCounts?: string;
   volumeCounts?: string;
-  adult?: "included" | "excluded";
-  doujin?: "included" | "excluded";
-  trackedTitles?: "included" | "excluded";
+  flags?: { [id: string]: "included" | "excluded" };
   tags?: { [id: string]: "included" | "excluded" };
 };
 
@@ -50,9 +48,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
   private startYears: string;
   private chapterCounts: string;
   private volumeCounts: string;
-  private adult: "" | "included" | "excluded";
-  private doujin: "" | "included" | "excluded";
-  private trackedTitles: "" | "included" | "excluded";
+  private flags: Record<string, "included" | "excluded">;
   private tags: Record<string, "included" | "excluded">;
 
   constructor(searchQuery: SearchQuery<SearchMetadata>) {
@@ -87,9 +83,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
     this.startYears = meta.startYears ?? "";
     this.chapterCounts = meta.chapterCounts ?? "";
     this.volumeCounts = meta.volumeCounts ?? "";
-    this.adult = meta.adult ?? "";
-    this.doujin = meta.doujin ?? "";
-    this.trackedTitles = meta.trackedTitles ?? "";
+    this.flags = { ...meta.flags };
     this.tags = { ...meta.tags };
   }
 
@@ -202,11 +196,7 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
         id: "flags",
         header: "Flags",
         layout: "list",
-        value: {
-          ...(this.adult ? { adult: this.adult } : {}),
-          ...(this.doujin ? { doujin: this.doujin } : {}),
-          ...(this.trackedTitles ? { trackedTitles: this.trackedTitles } : {}),
-        },
+        value: this.flags,
         items: [
           { id: "adult", title: "Adult" },
           { id: "doujin", title: "Doujin" },
@@ -286,12 +276,6 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
     this.volumeCounts = value;
   }
 
-  async handleFlagsChange(value: Record<string, "included" | "excluded">): Promise<void> {
-    this.adult = value.adult ?? "";
-    this.doujin = value.doujin ?? "";
-    this.trackedTitles = value.trackedTitles ?? "";
-  }
-
   async handleTagsChange(value: Record<string, "included" | "excluded">): Promise<void> {
     this.tags = value;
   }
@@ -308,9 +292,8 @@ export class AniListAdvancedSearchForm extends AdvancedSearchForm {
     if (this.startYears) result.startYears = this.startYears;
     if (this.chapterCounts) result.chapterCounts = this.chapterCounts;
     if (this.volumeCounts) result.volumeCounts = this.volumeCounts;
-    if (this.adult) result.adult = this.adult;
-    if (this.doujin) result.doujin = this.doujin;
-    if (this.trackedTitles) result.trackedTitles = this.trackedTitles;
+
+    if (Object.keys(this.flags).length > 0) result.flags = this.flags;
 
     if (Object.keys(this.tags).length > 0) result.tags = this.tags;
 

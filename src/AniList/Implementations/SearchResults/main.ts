@@ -194,33 +194,43 @@ export class SearchResultsImplementation
       }
     }
 
-    switch (meta.adult) {
-      case "included":
-        variables.isAdult = true;
-        break;
-      case "excluded":
-        variables.isAdult = false;
-        break;
-    }
-
-    switch (meta.doujin) {
-      case "included":
-        variables.isLicensed = false;
-        break;
-      case "excluded":
-        variables.isLicensed = true;
-        break;
-    }
-
-    switch (meta.trackedTitles) {
-      case "included":
-        variables.onList = true;
-        needsAuth = true;
-        break;
-      case "excluded":
-        variables.onList = false;
-        needsAuth = true;
-        break;
+    if (meta.flags) {
+      for (const [id, state] of Object.entries(meta.flags)) {
+        switch (id) {
+          case "adult":
+            switch (state) {
+              case "included":
+                variables.isAdult = true;
+                break;
+              case "excluded":
+                variables.isAdult = false;
+                break;
+            }
+            break;
+          case "doujin":
+            switch (state) {
+              case "included":
+                variables.isLicensed = false;
+                break;
+              case "excluded":
+                variables.isLicensed = true;
+                break;
+            }
+            break;
+          case "trackedTitles":
+            switch (state) {
+              case "included":
+                variables.onList = true;
+                needsAuth = true;
+                break;
+              case "excluded":
+                variables.onList = false;
+                needsAuth = true;
+                break;
+            }
+            break;
+        }
+      }
     }
 
     if (meta.tags) {
