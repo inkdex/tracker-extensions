@@ -54,6 +54,7 @@ query Query(
       source_in: $sourceIn
       sort: $sort
     ) {
+      averageScore
       chapters
       coverImage {
         extraLarge
@@ -64,6 +65,16 @@ query Query(
       genres
       id
       isAdult
+      staff {
+        edges {
+          node {
+            name {
+              full
+            }
+          }
+          role
+        }
+      }
       status
       synonyms
       title {
@@ -116,12 +127,14 @@ type DiscoverSectionsAndSearchPageInfo = {
 };
 
 type DiscoverSectionsAndSearchMedia = {
+  averageScore: number | null;
   chapters: number | null;
   coverImage: DiscoverSectionsAndSearchCoverImage;
   format: string;
   genres: string[];
   id: number;
   isAdult: boolean;
+  staff: DiscoverSectionsAndSearchStaff;
   status: string;
   title: DiscoverSectionsAndSearchTitle;
   volumes: number | null;
@@ -132,6 +145,23 @@ export type DiscoverSectionsAndSearchCoverImage = {
   extraLarge: string;
   large: string;
   medium: string;
+};
+
+export type DiscoverSectionsAndSearchStaff = {
+  edges: DiscoverSectionsAndSearchStaffEdge[];
+};
+
+export type DiscoverSectionsAndSearchStaffEdge = {
+  node: DiscoverSectionsAndSearchStaffNode;
+  role: string;
+};
+
+export type DiscoverSectionsAndSearchStaffNode = {
+  name: DiscoverSectionsAndSearchStaffName;
+};
+
+export type DiscoverSectionsAndSearchStaffName = {
+  full: string;
 };
 
 export type DiscoverSectionsAndSearchTitle = {

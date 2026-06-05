@@ -58,9 +58,11 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
     let sort: string;
 
     let countryOfOrigin: string | undefined;
+    let featured;
     switch (section.id) {
       case "trending-now":
         sort = MediaSort.TRENDING_DESC.id;
+        featured = true;
         break;
       case "all-time-popular":
         sort = MediaSort.POPULARITY_DESC.id;
@@ -89,6 +91,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
       variables,
       false,
       metadata,
+      featured,
     );
   }
 }
