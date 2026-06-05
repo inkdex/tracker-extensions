@@ -16,6 +16,7 @@ export async function getItems<ResultItemType>(
   queryVariables: DiscoverSectionsAndSearchVariables,
   needsAuth: boolean,
   metadata: number | undefined,
+  featured?: boolean,
 ): Promise<PagedResults<ResultItemType>> {
   const items: ResultItemType[] = [];
 
@@ -84,12 +85,53 @@ export async function getItems<ResultItemType>(
         subtitle = MediaStatus.RELEASING.label;
     }
 
+    let supertitle;
+    let infoItems;
+    if (featured) {
+      let author, artist;
+      for (const staff of searchResult.staff.edges) {
+        if (staff.role.startsWith("Story & Art")) {
+          author = staff.node.name.full;
+          artist = undefined;
+          break;
+        }
+        if (
+          !author &&
+          (staff.role.startsWith("Story") || staff.role.startsWith("Original Story"))
+        ) {
+          author = staff.node.name.full;
+          if (author && artist) break;
+        }
+        if (staff.role.startsWith("Art")) {
+          artist = staff.node.name.full;
+          if (author && artist) break;
+        }
+      }
+
+      if (author && artist) {
+        supertitle = `${author}, ${artist}`;
+      } else if (author) {
+        supertitle = author;
+      } else if (artist) {
+        supertitle = artist;
+      }
+
+      if (searchResult.averageScore) {
+        infoItems = [
+          { symbol: "book", text: subtitle },
+          { symbol: "percent", text: `${searchResult.averageScore}` },
+        ] as const;
+      }
+    }
+
     items.push({
       mangaId: searchResult.id.toString(),
       title,
       imageUrl: searchResult.coverImage.large,
       contentRating,
       subtitle,
+      supertitle,
+      infoItems,
     } as ResultItemType);
   }
 
