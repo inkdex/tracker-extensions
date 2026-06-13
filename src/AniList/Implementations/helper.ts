@@ -86,6 +86,7 @@ export async function getItems<ResultItemType>(
     }
 
     let supertitle;
+    let summary;
     let infoItems;
     if (featured) {
       let author, artist;
@@ -116,10 +117,14 @@ export async function getItems<ResultItemType>(
         supertitle = artist;
       }
 
+      if (searchResult) {
+        summary = searchResult.description?.replaceAll(/<br>|<i>|<\/i>|<a.*?>|<\/a>/g, "");
+      }
+
       if (searchResult.averageScore) {
         infoItems = [
+          { symbol: "star", text: `${searchResult.averageScore}%` },
           { symbol: "book", text: subtitle },
-          { symbol: "percent", text: `${searchResult.averageScore}` },
         ] as const;
       }
     }
@@ -131,6 +136,7 @@ export async function getItems<ResultItemType>(
       contentRating,
       subtitle,
       supertitle,
+      summary,
       infoItems,
     } as ResultItemType);
   }
