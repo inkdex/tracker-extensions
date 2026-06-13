@@ -61,6 +61,7 @@ query Query(
         large
         medium
       }
+      description
       format
       genres
       id
@@ -130,6 +131,7 @@ type DiscoverSectionsAndSearchMedia = {
   averageScore: number | null;
   chapters: number | null;
   coverImage: DiscoverSectionsAndSearchCoverImage;
+  description: string | null;
   format: string;
   genres: string[];
   id: number;
