@@ -1,8 +1,8 @@
 {
-  "buildTime": "2026-06-14T00:58:18.518Z",
+  "buildTime": "2026-06-15T09:56:12.548Z",
   "builtWith": {
-    "toolchain": "1.0.0-alpha.89",
-    "types": "1.0.0-alpha.89"
+    "toolchain": "1.0.0-alpha.92",
+    "types": "1.0.0-alpha.92"
   },
   "repository": {
     "name": "Tracker Extensions (0.9)",
