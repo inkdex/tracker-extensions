@@ -23,8 +23,8 @@
     "@types/chai": "^5.2.3",
     "chai": "^6.2.2",
     "husky": "^9.1.7",
-    "oxfmt": "^0.55.0",
-    "oxlint": "^1.70.0",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
     "oxlint-tsgolint": "^0.23.0",
     "typescript": "^6.0.3"
   }
