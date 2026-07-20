@@ -61,7 +61,7 @@ type ViewerOptions = {
   activityMergeTime: number;
   disabledListActivity: ViewerListActivityOption[];
   displayAdultContent: boolean;
-  staffNameLnaguage: string;
+  staffNameLanguage: string;
   titleLanguage: string;
 };
 

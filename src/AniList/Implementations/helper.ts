@@ -52,7 +52,7 @@ export async function getItems<ResultItemType>(
 
     const contentRating: ContentRating = searchResult.isAdult
       ? ContentRating.ADULT
-      : searchResult.genres.some((e) => e == "ecchi")
+      : searchResult.genres.some((e) => e.toLowerCase() == "ecchi")
         ? ContentRating.MATURE
         : ContentRating.EVERYONE;
 

@@ -73,7 +73,7 @@ export default async function makeRequest<ResponseType, QueryVariablesType = nev
   if (
     unkownResponse == undefined ||
     typeof unkownResponse !== "object" ||
-    !("data" in unkownResponse || "error" in unkownResponse)
+    !("data" in unkownResponse || "errors" in unkownResponse)
   ) {
     throw new Error(`Failed to parse JSON object: ${String(unkownResponse)}`);
   }

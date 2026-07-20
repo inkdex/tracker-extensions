@@ -55,7 +55,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
     section: DiscoverSection,
     metadata: number | undefined,
   ): Promise<PagedResults<DiscoverSectionItem>> {
-    let sort: string;
+    let sort = MediaSort.POPULARITY_DESC.id;
 
     let countryOfOrigin: string | undefined;
     let featured;
@@ -82,7 +82,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
 
     const variables: DiscoverSectionsAndSearchVariables = {
       page: metadata ?? 1,
-      sort: sort!,
+      sort: sort,
       countryOfOrigin: countryOfOrigin,
     };
 

@@ -118,7 +118,7 @@ export class TrackingForm extends Form {
     const titleProgress = this.titleProgress.MediaList;
 
     const mutationVariables: TitleProgressMutationVariables = {
-      userId: this.viewerId,
+      id: titleProgress.id,
       mediaId: this.sourceMangaId,
       status: titleProgress.status,
       score: titleProgress.score,
