@@ -51,7 +51,9 @@ export class SearchResultsImplementation
 
     const variables: DiscoverSectionsAndSearchVariables = {
       page: metadata ?? 1,
-      sort: sortingOption!.id,
+      sort:
+        sortingOption?.id ??
+        (query.title ? MediaSort.SEARCH_MATCH.id : MediaSort.POPULARITY_DESC.id),
     };
 
     if (query.title) {

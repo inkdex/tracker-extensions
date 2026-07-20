@@ -113,7 +113,7 @@ export const MediaSourceMaterial = {
   LIGHT_NOVEL: { id: "LIGHT_NOVEL", label: "Light Novel" },
   WEB_NOVEL: { id: "WEB_NOVEL", label: "Web Novel" },
   NOVEL: { id: "NOVEL", label: "Novel" },
-  Anime: { id: "ANIME", label: "Anime" },
+  ANIME: { id: "ANIME", label: "Anime" },
   VISUAL_NOVEL: { id: "VISUAL_NOVEL", label: "Visual Novel" },
   VIDEO_GAME: { id: "VIDEO_GAME", label: "Video Game" },
   DOUJINSHI: { id: "DOUJINSHI", label: "Doujinshi" },

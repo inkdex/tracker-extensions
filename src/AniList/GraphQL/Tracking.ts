@@ -124,7 +124,7 @@ mutation Mutation(
 `;
 
 export type TitleProgressMutationVariables = {
-  userId: number;
+  id?: number;
   mediaId: number;
   status?: string;
   score?: number;

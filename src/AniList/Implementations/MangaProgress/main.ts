@@ -130,13 +130,13 @@ export class MangaProgressImplementation implements MangaProgressProviding {
           }
         }
 
-        if (mediaList?.progress && mediaList.progress >= action.chapterNum) {
+        if (mediaList && mediaList.progress >= action.chapterNum) {
           trackedReadActions.successfulItems.push(action.id);
           continue;
         }
 
         const mutationVariables: TitleProgressMutationVariables = {
-          userId: viewerId,
+          id: mediaList?.id,
           mediaId: Number(action.sourceManga.mangaId),
           progress: Math.floor(action.chapterNum),
         };
