@@ -78,7 +78,7 @@ export function parseMangaInfo(series: MU.MUSeriesModelV1): MangaInfo {
     primaryTitle: titles[0] ?? "",
     secondaryTitles: titles.slice(1),
     synopsis: series.description || "",
-    thumbnailUrl: series.image?.url?.original || "",
+    thumbnailUrl: series.image?.url?.original || "https://www.mangaupdates.com/images/mascot.png",
 
     author: series.authors
       ?.filter((author) => author?.type === "Author" && author.name)
