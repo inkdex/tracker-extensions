@@ -53,7 +53,7 @@ export class SearchResultsImplementation
       };
 
       if (body.page < 1) {
-        return { items: [], metadata: { nextPage: -1 } };
+        return { items: [], metadata: -1 };
       }
 
       const meta = query.metadata ?? {};

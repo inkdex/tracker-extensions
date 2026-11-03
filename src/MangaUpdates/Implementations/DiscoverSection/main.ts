@@ -73,7 +73,7 @@ export class DiscoverSectionImplementation implements DiscoverSectionProviding {
       exclude_genre: manga.unsafeGenres,
     };
 
-    if (body.page < 0) {
+    if (body.page < 1) {
       return { items: [], metadata: -1 };
     }
 
