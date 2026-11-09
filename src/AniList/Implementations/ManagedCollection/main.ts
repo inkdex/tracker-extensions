@@ -1,16 +1,16 @@
 import {
   type ManagedCollection,
-  type ManagedCollectionChangeset,
+  type ManagedCollectionChange,
+  type ManagedCollectionChangeFailure,
+  type ManagedCollectionItems,
   type ManagedCollectionProviding,
   type SourceManga,
 } from "@paperback/types";
 
 import {
   managedCustomCollectionQuery,
-  managedStatusCollectionQuery,
   type ManagedCollectionMedia,
   type ManagedCustomCollectionQueryVariables,
-  type ManagedStatusCollectionQueryVariables,
 } from "../../GraphQL/ManagedCollection";
 import { viewerQuery, type Viewer } from "../../GraphQL/Viewer";
 import makeRequest from "../../Services/Requests";
@@ -20,7 +20,7 @@ export class ManagedCollectionImplementation implements ManagedCollectionProvidi
   // The MediaListCollection query does not show lists without entries. Using the
   // sectionOrder setting which does show all lists but this has no easy way to
   // get the status type of a list.
-  async getManagedLibraryCollections(): Promise<ManagedCollection[]> {
+  async getManagedCollections(): Promise<ManagedCollection[]> {
     const viewer = await makeRequest<Viewer>(viewerQuery, true);
 
     let statuses = {
@@ -57,48 +57,51 @@ export class ManagedCollectionImplementation implements ManagedCollectionProvidi
     });
   }
 
-  async commitManagedCollectionChanges(_changeset: ManagedCollectionChangeset): Promise<void> {
+  async applyManagedCollectionChanges(
+    _changes: ManagedCollectionChange[],
+  ): Promise<ManagedCollectionChangeFailure[]> {
     throw new Error(
       "Pushing changes to AniList via collection management is not supported at this moment, use progress tracking instead.",
     );
   }
 
-  async getSourceMangaInManagedCollection(
-    managedCollection: ManagedCollection,
-  ): Promise<SourceManga[]> {
-    const results: SourceManga[] = [];
+  async getManagedCollectionItems(
+    collections: ManagedCollection[],
+  ): Promise<ManagedCollectionItems[]> {
+    if (collections.length === 0) return [];
 
-    const [userId, isCustomListString, status] = managedCollection.id.split("-", 4);
-    const isCustomList = isCustomListString === "true";
+    const [userId] = collections[0].id.split("-", 1);
+    const variables: ManagedCustomCollectionQueryVariables = { userId: +userId, chunk: 1 };
 
-    const query = isCustomList ? managedCustomCollectionQuery : managedStatusCollectionQuery;
-
-    const variables: ManagedCustomCollectionQueryVariables | ManagedStatusCollectionQueryVariables =
-      isCustomList ? { userId: +userId, chunk: 1 } : { userId: +userId, chunk: 1, status };
+    // A list can span several chunks, so accumulate entries per list.
+    const itemsByList = new Map<string, SourceManga[]>();
 
     while (true) {
       const result = await makeRequest<
         ManagedCollectionMedia,
-        ManagedCustomCollectionQueryVariables | ManagedStatusCollectionQueryVariables
-      >(query, true, variables);
+        ManagedCustomCollectionQueryVariables
+      >(managedCustomCollectionQuery, true, variables);
 
       const { lists, hasNextChunk } = result.MediaListCollection;
 
-      const matchingList = lists.find((list) => list.name === managedCollection.title);
-      if (matchingList) {
-        results.push(...matchingList.entries.map((entry) => parseTitleDetails(entry.media)));
+      for (const list of lists) {
+        const key = `${list.isCustomList}-${list.name}`;
+        const items = itemsByList.get(key) ?? [];
+        items.push(...list.entries.map((entry) => parseTitleDetails(entry.media)));
+        itemsByList.set(key, items);
       }
 
-      const isLastChunkWithTarget =
-        lists.some(
-          (list) => list.name === managedCollection.title && list.isCustomList === isCustomList,
-        ) && lists.at(-1)!.name !== managedCollection.title;
-
-      if (!hasNextChunk || isLastChunkWithTarget) break;
+      if (!hasNextChunk) break;
 
       variables.chunk += 1;
     }
 
-    return results;
+    return collections.map((collection) => {
+      const isCustomList = collection.id.split("-", 2)[1] === "true";
+      return {
+        collectionId: collection.id,
+        items: itemsByList.get(`${isCustomList}-${collection.title}`) ?? [],
+      };
+    });
   }
 }
